@@ -60,6 +60,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Сервер запущен по адресу 0.0.0.0:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`Сервер запущен, порт:${PORT}`);
 });

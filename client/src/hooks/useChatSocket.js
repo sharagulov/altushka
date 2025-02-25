@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+//altushka/client/src/hooks/useChatSocket.js.js
 
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * useChatSocket - кастомный React-хук, инкапсулирующий логику WebSocket.

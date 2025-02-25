@@ -6,7 +6,7 @@ const WebSocket = require('ws');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.SERVER_PORT || 3001;
+const PORT = process.env.SERVER_PORT || 3001 || 3000;
 console.log(`Выбранный порт: ${PORT}`);
 
 app.use(express.static(path.join(__dirname, '../client/build')));

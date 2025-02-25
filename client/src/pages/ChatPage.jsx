@@ -1,19 +1,28 @@
 // altushka/client/src/pages/ChatPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-const { users, messages } = require('../mockdb');
 
 export default function ChatPage() {
   const { userId: targetUserId } = useParams(); // с кем чатимся
   const navigate = useNavigate();
 
   const [ws, setWs] = useState(null);
-  const [messagesCurrent, setMessages] = useState([]);
+  const [historyData, setHistoryData] = useState([]); // тут будем хранить историю
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
   const myId = localStorage.getItem('userId');
   const myUsername = localStorage.getItem('username');
-  const historyData = messages;
+
+  useEffect(() => {
+    // При первом рендере получим историю
+    fetch(`/api/messages/${myId}/${targetUserId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setHistoryData(data); // сохраняем в стейт
+      })
+      .catch((err) => console.error('Ошибка загрузки истории:', err));
+  }, [myId, targetUserId]);
 
   useEffect(() => {
     if (!myId) {
@@ -25,9 +34,8 @@ export default function ChatPage() {
     const wsURL = protocol + '//' + window.location.host;
     const socket = new WebSocket(wsURL);
 
-
     socket.onopen = () => {
-      console.log('WS opened');
+      console.log('Вебсокет используется');
       // Отправляем init, чтобы сервер знал, кто мы
       socket.send(JSON.stringify({
         type: 'init',
@@ -48,11 +56,11 @@ export default function ChatPage() {
     };
 
     socket.onclose = () => {
-      console.log('WS closed');
+      console.log('Вебсокет не используется');
     };
 
     socket.onerror = (err) => {
-      console.log('WS error', err);
+      console.log('Ошибка вебсокета на клиентской стороне', err);
     };
 
     setWs(socket);
@@ -71,7 +79,6 @@ export default function ChatPage() {
       to: targetUserId,
       text: inputValue
     };
-
     ws.send(JSON.stringify(msg));
 
     // Добавим своё сообщение в messages, чтобы сразу отобразить
@@ -79,13 +86,15 @@ export default function ChatPage() {
     setInputValue('');
   };
 
+  const allMessages = [...historyData, ...messages];
+
   return (
     <div style={{ margin: '20px' }}>
       <h2>Чат с пользователем ID: {targetUserId}</h2>
       <p>Вы: {myUsername} (ID: {myId})</p>
 
       <div className="chat-window" style={{ border: '1px solid #ccc', padding: '10px', height: '300px', overflowY: 'auto' }}>
-        {messages.map((m, i) => {
+        {allMessages.map((m, i) => {
           const isMe = m.from === myId;
           return (
             <div key={i} style={{ textAlign: isMe ? 'right' : 'left' }}>
@@ -103,10 +112,6 @@ export default function ChatPage() {
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
         />
         <button onClick={handleSend}>Отправить</button>
-      </div>
-
-      <div>
-        {messages}
       </div>
     </div>
   );

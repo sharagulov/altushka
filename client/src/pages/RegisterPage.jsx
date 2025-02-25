@@ -23,7 +23,6 @@ export default function RegisterPage() {
         // Сохраняем user в localStorage
         localStorage.setItem('userId', data.user.id);
         localStorage.setItem('username', data.user.username);
-        alert('Регистрация прошла успешно!');
         navigate('/users');
       } else {
         alert(data.error || 'Ошибка регистрации');

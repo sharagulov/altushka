@@ -13,7 +13,6 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/users" element={<UserListPage />} />
         <Route path="/chat/:userId" element={<ChatPage />} />
-        {/* Редирект на /register по умолчанию */}
         <Route path="*" element={<RegisterPage />} />
       </Routes>
     </BrowserRouter>

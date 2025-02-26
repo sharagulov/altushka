@@ -1,5 +1,5 @@
 // altushka/client/src/pages/ChatPage.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 export default function ChatPage() {
@@ -51,10 +51,10 @@ export default function ChatPage() {
           setMessages((prev) => [...prev, data]);
         }
       } catch (err) {
-        console.error('Ошибка parse:', err);
+        console.error('Ошибка парсинга:', err);
       }
     };
-
+    
     socket.onclose = () => {
       console.log('Вебсокет не используется');
     };
@@ -89,11 +89,11 @@ export default function ChatPage() {
   const allMessages = [...historyData, ...messages];
 
   return (
-    <div style={{ margin: '20px' }}>
+    <div>
       <h2>Чат с пользователем ID: {targetUserId}</h2>
       <p>Вы: {myUsername} (ID: {myId})</p>
 
-      <div className="chat-window" style={{ border: '1px solid #ccc', padding: '10px', height: '300px', overflowY: 'auto' }}>
+      <div className="chat-window">
         {allMessages.map((m, i) => {
           const isMe = m.from === myId;
           return (
@@ -105,7 +105,7 @@ export default function ChatPage() {
         })}
       </div>
 
-      <div style={{ marginTop: '10px' }}>
+      <div>
         <input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

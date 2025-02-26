@@ -1,0 +1,62 @@
+@use '../styles/global.scss' as v;
+
+main {
+  width: 400px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.header-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 20px;
+
+  overflow: hidden;
+  transition: height 0.5s ease;
+  height: 70px;
+}
+.header-block.no1 {
+  height: 70px;
+}
+.header-block.no1 {
+  height: 110px;
+}
+.header-block.no2 {
+  height: 140px;
+}
+.header-block.no3 {
+  height: 170px;
+}
+
+.head-name {
+  text-align: center;
+}
+
+.name-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input.error {
+  border: 1px solid v.$overgrey;
+}
+
+input.ok {
+  border: 1px solid v.$blue;
+}
+
+.footer-block {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

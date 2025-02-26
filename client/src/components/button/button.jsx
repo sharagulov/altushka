@@ -1,0 +1,11 @@
+import React from 'react';
+import './button.scss';
+import '../../styles/global.scss';
+
+export default function Button({ children, variant = 'default', onClick, ...props }) {
+  return (
+    <button  className={`btn btn-${variant}`} onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
+}

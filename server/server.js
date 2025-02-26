@@ -6,13 +6,13 @@ const http = require('http');
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
 const { users, messages } = require('../client/src/mockdb');
+const { v4: uuidv4 } = require('uuid');
 
 dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
 const PORT = process.env.SERVER_PORT || 3001;
-
 const sockets = {};
 
 
@@ -31,7 +31,7 @@ app.post('/api/register', (req, res) => {
   }
 
   const newUser = {
-    id: Date.now().toString(),
+    id: uuidv4(),
     username,
     password,
   };
@@ -104,7 +104,7 @@ wss.on('connection', (ws) => {
         console.log(`Вебсокет: сообщение от ${from} к ${to}: ${text}`);
 
         const newMsg = {
-          id: Date.now().toString(),
+          id: uuidv4(),
           from,
           to,
           text,
@@ -128,6 +128,11 @@ wss.on('connection', (ws) => {
 
   ws.on('close', () => {
     console.log('Вебсокет закрыт');
+    Object.keys(sockets).forEach((key) => {
+      if (sockets[key] === ws) {
+        delete sockets[key];
+      }
+    });
   });
 });
 

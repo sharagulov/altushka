@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage';
 import UserListPage from './pages/UserListPage';
 import ChatPage from './pages/ChatPage';
-import './App.css';
+import './styles/global.scss';
 
 function App() {
   return (

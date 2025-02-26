@@ -19,7 +19,7 @@ export default function RegisterPage() {
   
   const handleUsernameChange = (e) => {
     let value = e.target.value.trim();
-    let messages = ["Слишком короткое", "Слишком длинное", "Только латиница, цифры и нижнее подчеркивание", "Серьезно?"];
+    let messages = ["Слишком короткое", "Слишком длинное", "Некорректные символы", "Серьезно?"];
   
     if (!value.startsWith('@')) {
       value = '@' + value.replace(/^@+/, '');
@@ -55,7 +55,7 @@ export default function RegisterPage() {
   };
   
 
-  
+
 
   const handleRegister = async () => {
     if (!isValid) {
@@ -100,7 +100,7 @@ export default function RegisterPage() {
         {isValid === 2 && (
           <div className="error-container">
             {errorMessages.map((msg, index) => (
-              <span key={index} className="error-message">{msg}</span>
+              <span key={index} className="error-message greyed-text">{msg}</span>
             ))}
           </div>
         )}

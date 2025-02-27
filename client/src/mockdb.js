@@ -2,7 +2,7 @@
 
 // Просто массивы-«таблицы»
 const users = []; // [{ id, username, password }]
-const messages = []; // [{ id, from, to, text, created_at }, ...]
+const messages = []; // [{ uuid, from, to, text, created_at }, ...]
 
 module.exports = {
   users,

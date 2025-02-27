@@ -1,0 +1,17 @@
+@use '@/styles/global.scss' as v;
+
+
+.header-row-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  flex-grow: 1;
+}
+

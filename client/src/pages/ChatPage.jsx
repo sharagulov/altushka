@@ -1,45 +1,64 @@
 // altushka/client/src/pages/ChatPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getCookieValue } from "@/components/сookieValue.js";
 
 export default function ChatPage() {
-  const { userId: targetUserId } = useParams(); // с кем чатимся
   const navigate = useNavigate();
-
+  
   const [ws, setWs] = useState(null);
   const [historyData, setHistoryData] = useState([]); // тут будем хранить историю
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [targetUser, setTargerUser] = useState(null)
+  
+  const { userId: targetUserId } = useParams();
 
-  const myId = localStorage.getItem('userId');
+  const currentUser = getCookieValue("user");
+  const currentUserId = currentUser.id;
   const myUsername = localStorage.getItem('username');
 
   useEffect(() => {
     // При первом рендере получим историю
-    fetch(`/api/messages/${myId}/${targetUserId}`)
+    fetch(`/api/users?search=${targetUserId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTargerUser(data[0]);
+      })
+      .catch((err) => console.error('Ошибка определения собеседника:', err));
+
+    fetch(`/api/messages/${currentUserId}/${targetUserId}`)
       .then((res) => res.json())
       .then((data) => {
         setHistoryData(data); // сохраняем в стейт
       })
       .catch((err) => console.error('Ошибка загрузки истории:', err));
-  }, [myId, targetUserId]);
+  }, [currentUserId, targetUserId]);
 
   useEffect(() => {
-    if (!myId) {
-      navigate('/register');
-      return;
-    }
+    // if (!myId) {
+    //   navigate('/register');
+    //   return;
+    // }
+
+
     // Инициируем WebSocket
+    const isDev = window.location.hostname === 'localhost'; 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsURL = protocol + '//' + window.location.host;
+    
+    // В дев-режиме WebSocket идёт на 3001, в продакшене — на тот же хост
+    const wsHost = isDev ? 'localhost:3001' : window.location.host;
+    const wsURL = `${protocol}//${wsHost}`;
+    
     const socket = new WebSocket(wsURL);
+    
 
     socket.onopen = () => {
       console.log('Вебсокет используется');
       // Отправляем init, чтобы сервер знал, кто мы
       socket.send(JSON.stringify({
         type: 'init',
-        userId: myId
+        userId: currentUserId
       }));
     };
 
@@ -68,21 +87,21 @@ export default function ChatPage() {
     return () => {
       socket.close();
     };
-  }, [myId, navigate]);
+  }, [currentUserId, navigate]);
 
   const handleSend = () => {
     if (!inputValue.trim() || !ws) return;
     // Отправляем на сервер
     const msg = {
       type: 'chat',
-      from: myId,
+      from: currentUserId,
       to: targetUserId,
       text: inputValue
     };
     ws.send(JSON.stringify(msg));
+    console.log(msg)
 
     // Добавим своё сообщение в messages, чтобы сразу отобразить
-    setMessages((prev) => [...prev, { ...msg }]);
     setInputValue('');
   };
 
@@ -90,12 +109,12 @@ export default function ChatPage() {
 
   return (
     <div>
-      <h2>Чат с пользователем ID: {targetUserId}</h2>
-      <p>Вы: {myUsername} (ID: {myId})</p>
+      <h2>Чат с пользователем ID: {targetUser.username}</h2>
+      <p>Вы: {myUsername} (ID: {currentUser.username})</p>
 
       <div className="chat-window">
         {allMessages.map((m, i) => {
-          const isMe = m.from === myId;
+          const isMe = m.from === currentUserId;
           return (
             <div key={i} style={{ textAlign: isMe ? 'right' : 'left' }}>
               <strong>{isMe ? 'Вы' : `User ${m.from}`}: </strong>

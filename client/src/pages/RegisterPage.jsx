@@ -1,10 +1,9 @@
 // altushka/client/src/pages/RegisterPage.jsx
 import React, {useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/global.scss'
-import '../styles/RPstyle.scss'
-import Button from '../components/button/button'
-import loadingSvg from '../assets/vectors/loading.svg';
+import '@/styles/RPstyle.scss'
+import Button from '@/components/button/button'
+import loadingSvg from '@/assets/vectors/loading.svg';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('@');
@@ -112,7 +111,7 @@ export default function RegisterPage() {
         )}
       </div>
       <div className="footer-block"> 
-        <Button variant="primary" onClick={handleRegister} disabled={isValid !== 1}>Продолжить</Button>
+        <Button variant="primary" onClick={handleRegister} disabled={isValid !== 1 || clickedInstance }>Продолжить</Button>
         <img src={loadingSvg} className={`${clickedInstance ? "clicked" : ""}`} alt="loading" />
         <span className="greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       </div>

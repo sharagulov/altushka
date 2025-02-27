@@ -67,6 +67,14 @@ app.get('/api/messages/:from/:to', (req, res) => {
   res.json(conversation);
 });
 
+app.get('/api/messages/:from', (req, res) => {
+  const { from } = req.params;
+  const recipientUsernames = new Set(messages.filter(m => m.from === from).map(m => m.to));
+  const recipientUsers = users.filter(user => recipientUsernames.has(user.id));
+  console.log(recipientUsernames, recipientUsers);
+  res.json(recipientUsers);
+});
+
 
 
 

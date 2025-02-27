@@ -1,11 +1,11 @@
 // altushka/client/src/pages/PasswordPage.jsx
 
-import ClipboardIcon from "../components/ClipboardIcon";
-import '../styles/global.scss'
-import '../styles/RPstyle.scss'
-import '../styles/PPstyle.scss'
+import ClipboardIcon from "@/components/ClipboardIcon";
+import '@/styles/global.scss'
+import '@/styles/RPstyle.scss'
+import '@/styles/PPstyle.scss'
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/button/button'
+import Button from '@/components/button/button'
 
 import React from "react";
 import { useSearchParams } from "react-router-dom";
@@ -19,22 +19,6 @@ function PasswordPage() {
     navigate('/users')
   }
 
-  const getPasswordFromCookies = () => {
-    const cookies = document.cookie.split("; ");
-    const userCookie = cookies.find((row) => row.startsWith("user="));
-    if (!userCookie) return "";
-  
-    try {
-      const userData = JSON.parse(decodeURIComponent(userCookie.split("=")[1]));
-      return userData.generatedPassword || "";
-    } catch (error) {
-      console.error("Ошибка чтения куки:", error);
-      return "";
-    }
-  };
-
-  const password = getPasswordFromCookies();
-
   return (
     <main>
       <h2 className='head-name'>Почти готово</h2>
@@ -42,7 +26,7 @@ function PasswordPage() {
         <div className='middle-block'>
           <span>Ваш пароль:</span>
           <span className="password">{passwordFromUrl}</span>
-          <ClipboardIcon text={password} />
+          <ClipboardIcon text={passwordFromUrl} />
         </div>
         <span className="greyed-text">Этот пароль можно потерять, ничего страшного.</span>
       </div>

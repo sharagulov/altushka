@@ -7,41 +7,37 @@ export default function ChatPage() {
   const navigate = useNavigate();
   
   const [ws, setWs] = useState(null);
-  const [historyData, setHistoryData] = useState([]); // тут будем хранить историю
+  const [historyData, setHistoryData] = useState([]);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [targetUser, setTargerUser] = useState(null)
+  const [targetUser, setTargerUser] = useState({})
   
   const { userId: targetUserId } = useParams();
 
   const currentUser = getCookieValue("user");
   const currentUserId = currentUser.id;
-  const myUsername = localStorage.getItem('username');
 
   useEffect(() => {
     // При первом рендере получим историю
     fetch(`/api/users?search=${targetUserId}`)
       .then((res) => res.json())
-      .then((data) => {
-        setTargerUser(data[0]);
-      })
+      .then((data) => setTargerUser(data[0]))
       .catch((err) => console.error('Ошибка определения собеседника:', err));
+  }, [targetUserId]);
 
-    fetch(`/api/messages/${currentUserId}/${targetUserId}`)
+  useEffect(() => {
+    fetch(`/api/messages/${currentUserId}/${targetUser.id}`)
       .then((res) => res.json())
-      .then((data) => {
-        setHistoryData(data); // сохраняем в стейт
-      })
+      .then((data) => setHistoryData(data))
       .catch((err) => console.error('Ошибка загрузки истории:', err));
-  }, [currentUserId, targetUserId]);
+  }, [currentUserId, targetUser])
 
   useEffect(() => {
     // if (!myId) {
     //   navigate('/register');
     //   return;
     // }
-
-
+    
     // Инициируем WebSocket
     const isDev = window.location.hostname === 'localhost'; 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -95,13 +91,13 @@ export default function ChatPage() {
     const msg = {
       type: 'chat',
       from: currentUserId,
-      to: targetUserId,
+      to: targetUser.id,
       text: inputValue
     };
     ws.send(JSON.stringify(msg));
-    console.log(msg)
 
     // Добавим своё сообщение в messages, чтобы сразу отобразить
+    setMessages((prev) => [...prev, msg])
     setInputValue('');
   };
 
@@ -110,7 +106,7 @@ export default function ChatPage() {
   return (
     <div>
       <h2>Чат с пользователем ID: {targetUser.username}</h2>
-      <p>Вы: {myUsername} (ID: {currentUser.username})</p>
+      <p>Вы:  (ID: {currentUser.username})</p>
 
       <div className="chat-window">
         {allMessages.map((m, i) => {

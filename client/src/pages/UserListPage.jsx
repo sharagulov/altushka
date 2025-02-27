@@ -23,48 +23,43 @@ export default function UserListPage() {
   //   }
   // }, [userId, navigate]);
 
-  const loadAllUsers = async () => {
-    try {
-      const res = await fetch('/api/users');
-      const data = await res.json();
-      setAllUsers(data);
-    } catch (err) {
-      console.error(err);
-      alert('Ошибка');
-    }
-  };
 
-
-  const loadRelatedUsers = useCallback(async () => {
-    if (!currentUserId) return;
+  useEffect(() => {
     try {
-      const res = await fetch(`/api/messages/${currentUserId}`);
-      const data = await res.json();
-      setChattedUserIds(data);
-      console.log(data, currentUserId)
+      fetch('/api/users')
+        .then((res) => res.json())
+        .then((data) => setAllUsers(data))
+        .catch((err) => console.error("Ошибка загрузки списка пользователей:", err))
     } catch (err) {
       console.log(err, "Ошибка загрузки связанных пользователей");
     }
-  }, [currentUserId]);
+  }, [])
 
   useEffect(() => {
-    loadAllUsers()
-    loadRelatedUsers();
-  }, [loadRelatedUsers]);
+    if (!currentUserId) return;
+    try {
+      fetch(`/api/messages/${currentUserId}`)
+        .then((res) => res.json())
+        .then((data) => setChattedUserIds(data))
+        .catch((err) => console.error("Ошибка загрузки истории переписок:", err))
+    } catch (err) {
+      console.log(err, "Ошибка загрузки связанных пользователей");
+    }
+  }, [currentUserId])
+
+  useEffect(() => {
+    setUsers(chattedUserIds);
+  }, [chattedUserIds])
 
   const handleSearchChange = (e) => {
-    const value = e.target.value;
+    const value = typeof e === 'string' ? e : e.target.value;
     setSearch(value);
     if (!value) {
       setUsers(chattedUserIds)
       console.log(chattedUserIds, users, value)
     } else {
-      setUsers(
-        allUsers.filter((user) =>
-          user.username.toLowerCase().trim().includes(value.toLowerCase().trim())
-        )
-      );
-      console.log(users, value)
+      setUsers(allUsers.filter((user) => user.username.toLowerCase().trim().includes(value.toLowerCase().trim())));
+      console.log(users, value, currentUser.username)
     }
   };
 
@@ -85,7 +80,7 @@ export default function UserListPage() {
       </div>
       <span className="greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       <div className='chats-block'>
-        {users
+        {users.filter((u) => u.username !== currentUser.username)
           .map((u) => (
             <li key={u.id}>
               <Link to={`/chat/${u.username}`}>{u.username}</Link>

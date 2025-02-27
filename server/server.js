@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
-const PORT = process.env.SERVER_PORT || 3001;
+const PORT = 3001;
 const sockets = {};
 
 
@@ -20,24 +20,20 @@ const sockets = {};
 
 app.post('/api/register', (req, res) => {
   const { username, password } = req.body;
+  const generatedPassword = Math.random().toString(36).slice(-8);
 
-  if (!username || !password) {
+  if (!username) {
     return res.status(400).json({ error: 'Не все поля заполнены' });
-  }
-
-  const existing = users.find((u) => u.username === username);
-  if (existing) {
-    return res.status(400).json({ error: 'Пользователь уже существует' });
   }
 
   const newUser = {
     id: uuidv4(),
     username,
-    password,
+    generatedPassword,
   };
   users.push(newUser);
 
-  console.log('Зарегистрирован новый пользователь:', 'ID:', newUser.id, ', Имя:', newUser.username, ', Пароль:', newUser.password);
+  console.log('Зарегистрирован новый пользователь:', 'ID:', newUser.id, ', Имя:', newUser.username, ', Пароль:', newUser.generatedPassword);
   return res.json({ message: 'Регистрация прошла успешно', user: newUser });
 });
 
@@ -136,6 +132,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });

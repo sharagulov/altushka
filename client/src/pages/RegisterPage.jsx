@@ -1,5 +1,5 @@
 // altushka/client/src/pages/RegisterPage.jsx
-import React, { useEffect, useState, version } from 'react';
+import React, {useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/global.scss'
 import '../styles/RPstyle.scss'
@@ -40,7 +40,7 @@ export default function RegisterPage() {
     }
   
     if (onlyUnderscoresRegex.test(value.slice(1))) {
-      newErrors = [messages[3]]; // Если только `_`, удаляем другие ошибки и показываем "Серьезно?"
+      newErrors = [messages[3]];
     }
   
     setErrorMessages(newErrors);
@@ -61,6 +61,7 @@ export default function RegisterPage() {
     if (!isValid) {
       return;
     }
+
     try {
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -69,12 +70,11 @@ export default function RegisterPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        // Сохраняем user в localStorage
-        localStorage.setItem('userId', data.user.id);
-        localStorage.setItem('username', data.user.username);
-        navigate('/users');
+        navigate(`/password?pass=${encodeURIComponent(data.user.generatedPassword)}`);
+        document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; max-age=3600`; 
+        console.log(data.message);
       } else {
-        alert(data.error || 'Ошибка регистрации');
+        console.log(data.error || 'Ошибка регистрации');
       }
     } catch (err) {
       console.error(err);
@@ -114,7 +114,7 @@ export default function RegisterPage() {
         />
       </div> */}
       <div className="footer-block"> 
-        <Button disa variant="primary" onClick={handleRegister} disabled={isValid !== 1}>Войти</Button>
+        <Button variant="primary" onClick={handleRegister} disabled={isValid !== 1}>Продолжить</Button>
         <span className="greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       </div>
     </main>

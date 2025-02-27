@@ -10,12 +10,12 @@ export default function UserListPage() {
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!userId) {
-      // Если не залогинен (нет в localStorage) → на регистрацию
-      navigate('/register');
-    }
-  }, [userId, navigate]);
+  // useEffect(() => {
+  //   if (!userId) {
+  //     // Если не залогинен (нет в localStorage) → на регистрацию
+  //     navigate('/register');
+  //   }
+  // }, [userId, navigate]);
 
   const handleSearch = async () => {
     try {

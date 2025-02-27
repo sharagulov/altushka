@@ -3,6 +3,7 @@
 import ClipboardIcon from "../components/ClipboardIcon";
 import '../styles/global.scss'
 import '../styles/RPstyle.scss'
+import '../styles/PPstyle.scss'
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/button/button'
 
@@ -37,13 +38,15 @@ function PasswordPage() {
   return (
     <main>
       <h2 className='head-name'>Почти готово</h2>
-      <div className='middle-block'>
-        <span>Ваш пароль:</span>
-        <span className="password">{passwordFromUrl}</span>
-        <ClipboardIcon text={password} />
+      <div className="center-block">
+        <div className='middle-block'>
+          <span>Ваш пароль:</span>
+          <span className="password">{passwordFromUrl}</span>
+          <ClipboardIcon text={password} />
+        </div>
+        <span className="greyed-text">Этот пароль можно потерять, ничего страшного.</span>
       </div>
-      <span className="greyed-text">Этот пароль можно потерять, ничего страшного.</span>
-      <div className='footer-block '>
+        <div className='footer-block '>
         <Button onClick={handleStart} variant="primary">Войти</Button>
       </div>
     </main>

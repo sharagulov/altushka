@@ -19,7 +19,7 @@ const sockets = {};
 
 
 app.post('/api/register', (req, res) => {
-  const { username, password } = req.body;
+  const { username } = req.body;
   const generatedPassword = Math.random().toString(36).slice(-8);
 
   if (!username) {

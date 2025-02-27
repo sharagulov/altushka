@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/global.scss'
 import '../styles/RPstyle.scss'
 import Button from '../components/button/button'
+import loadingSvg from '../assets/vectors/loading.svg';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('@');
-  const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState([])
   const [isValid, setIsValid] = useState(0);
+  const [clickedInstance, setClickedInstance] = useState(false);
   const navigate = useNavigate();
 
   const usernameRegex = /^[1-9a-zA-Z_]+$/;
@@ -28,7 +29,7 @@ export default function RegisterPage() {
     let newErrors = [];
   
     if (value.length < 6 && !onlyUnderscoresRegex.test(value.slice(1))) {
-      newErrors.push(messages[0]); // "Слишком короткое" только если есть буквы/цифры
+      newErrors.push(messages[0]); 
     }
   
     if (value.length > 21) {
@@ -62,23 +63,28 @@ export default function RegisterPage() {
       return;
     }
 
+    setClickedInstance(true);
+    setTimeout(() => {
+      setClickedInstance(false);
+    }, 7000)
+
     try {
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username })
       });
       const data = await res.json();
       if (res.ok) {
-        navigate(`/password?pass=${encodeURIComponent(data.user.generatedPassword)}`);
         document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; max-age=3600`; 
-        console.log(data.message);
+        setTimeout(() => {
+          navigate(`/password?pass=${encodeURIComponent(data.user.generatedPassword)}`);
+        }, 2000)
       } else {
         console.log(data.error || 'Ошибка регистрации');
       }
     } catch (err) {
       console.error(err);
-      alert('Сетевая ошибка');
     }
   };
 
@@ -105,16 +111,9 @@ export default function RegisterPage() {
           </div>
         )}
       </div>
-      {/* <div>
-        <label>Пароль:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div> */}
       <div className="footer-block"> 
         <Button variant="primary" onClick={handleRegister} disabled={isValid !== 1}>Продолжить</Button>
+        <img src={loadingSvg} className={`${clickedInstance ? "clicked" : ""}`} alt="loading" />
         <span className="greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       </div>
     </main>

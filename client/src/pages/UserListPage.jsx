@@ -24,6 +24,15 @@ export default function UserListPage() {
   // }, [userId, navigate]);
 
 
+  const fetchMessages = useCallback(() => {
+    if (!currentUserId) return;
+    
+    fetch(`/api/messages/${currentUserId}`)
+      .then((res) => res.json())
+      .then((data) => setChattedUserIds(data))
+      .catch((err) => console.error("Ошибка загрузки истории переписок:", err));
+  }, [currentUserId]);
+
   useEffect(() => {
     try {
       fetch('/api/users')
@@ -35,17 +44,16 @@ export default function UserListPage() {
     }
   }, [])
 
+
   useEffect(() => {
-    if (!currentUserId) return;
-    try {
-      fetch(`/api/messages/${currentUserId}`)
-        .then((res) => res.json())
-        .then((data) => setChattedUserIds(data))
-        .catch((err) => console.error("Ошибка загрузки истории переписок:", err))
-    } catch (err) {
-      console.log(err, "Ошибка загрузки связанных пользователей");
-    }
-  }, [currentUserId])
+    fetchMessages();
+  
+    const interval = setInterval(() => {
+      fetchMessages();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [fetchMessages]);
 
   useEffect(() => {
     setUsers(chattedUserIds);

@@ -110,10 +110,11 @@ export default function RegisterPage() {
           </div>
         )}
       </div>
+      <span className="mobile-warning greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       <div className="footer-block"> 
         <Button variant="primary" onClick={handleRegister} disabled={isValid !== 1 || clickedInstance }>Продолжить</Button>
         <img src={loadingSvg} className={`${clickedInstance ? "clicked" : ""}`} alt="loading" />
-        <span className="greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
+        <span className="warning greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       </div>
     </main>
   );

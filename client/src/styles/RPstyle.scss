@@ -8,6 +8,7 @@ main {
   flex-direction: column;
   gap: 30px;
   margin-inline: 40px;
+
 }
 
 .header-block {
@@ -57,6 +58,7 @@ input.ok {
   justify-content: start;
   gap: 15px;
 }
+
 
 .error-container {
   display: flex;
@@ -110,10 +112,26 @@ img {
 
  &.clicked {
   width: 40px;
+
+  @media(max-width: 500px) {
+    width: 20px;
+  }
  }
 }
 
 @keyframes spin {
   0% {transform: rotate(0deg);}
   100% {transform: rotate(359deg);}
+}
+
+.warning {
+  @media(max-width: 500px) {
+    display: none
+  }
+}
+
+.mobile-warning  {
+  @media(min-width: 500px) {
+    display: none
+  }
 }

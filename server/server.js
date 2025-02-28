@@ -126,6 +126,7 @@ wss.on('connection', (ws) => {
             type: 'chat',
             from,
             text,
+            created_at: Date.now()
           }));
         }
       }

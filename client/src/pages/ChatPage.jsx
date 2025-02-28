@@ -60,6 +60,7 @@ export default function ChatPage() {
         const data = JSON.parse(event.data);
         if (data.type === 'chat') {
           setMessages((prev) => [...prev, data]);
+          console.log(data)
         }
       } catch (err) {
         console.error('Ошибка парсинга:', err);

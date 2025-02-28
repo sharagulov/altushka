@@ -1,10 +1,10 @@
 @use '@/styles/global.scss' as v;
 
 .msg-container {
-  border-radius: 9999px;
+  border-radius: 20px;
   background-color: v.$grey;
   padding: 10px 15px;
-  width: fit-content;
+  max-width: 45%;
 }
 
 .msg-info-container {
@@ -12,6 +12,10 @@
   justify-content: space-between;
   gap: 15px;
   align-items: flex-end;
+  
 }
 
+.msg-text-container {
+  word-break: break-all;
+}
 

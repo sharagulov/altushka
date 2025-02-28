@@ -4,7 +4,7 @@
   border-radius: 20px;
   background-color: v.$grey;
   padding: 10px 15px;
-  max-width: 45%;
+  max-width: 65%;
 }
 
 .msg-info-container {
@@ -16,6 +16,6 @@
 }
 
 .msg-text-container {
-  word-break: break-all;
+  word-break: keep-all;
 }
 

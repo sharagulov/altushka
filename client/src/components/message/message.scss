@@ -4,18 +4,22 @@
   border-radius: 20px;
   background-color: v.$grey;
   padding: 10px 15px;
-  max-width: 65%;
+  max-width: 45%;
+
+  @media (max-width:v.$smallw) {
+    max-width: 65%;
+  }
 }
+
 
 .msg-info-container {
   display: flex;
   justify-content: space-between;
   gap: 15px;
-  align-items: flex-end;
-  
+  align-items: flex-end; 
 }
 
 .msg-text-container {
-  word-break: keep-all;
+  word-break: b
 }
 

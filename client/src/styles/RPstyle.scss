@@ -66,25 +66,6 @@ input.ok {
   gap: 5px;
 }
 
-.password {
-  background-color: v.$grey;
-  border-radius: 10px;
-  padding: 10px;
-  transition: background-color 0.1s;
-  user-select: none;
-  z-index: 10;
-
-  &:hover {
-    background-color: v.$overgrey;
-  }
-}
-
-.middle-block {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  justify-content: center;
-}
 
 .my-icon {
   line-height: 1;
@@ -124,14 +105,15 @@ img {
   100% {transform: rotate(359deg);}
 }
 
-.warning {
+.desktop {
   @media(max-width: 500px) {
     display: none
   }
 }
 
-.mobile-warning  {
+.mobile  {
   @media(min-width: 500px) {
     display: none
   }
 }
+

@@ -1,0 +1,78 @@
+@use '@/styles/global.scss' as v;
+
+.cp-fc {
+  max-height: 80px;
+  z-index: 7777;
+  padding: 20px;
+}
+
+.cp-global-container {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+.cp-left-container {
+  flex: 3 1 30%;
+  border-right: 1px solid v.$overgrey;
+  background-color: v.$grey;
+}
+
+.cp-right-container {
+  flex: 7 1 70%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+}
+
+.cp-right-top-container {
+  flex: 1 1 10%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: v.$grey;
+  max-height: 60px;
+}
+
+.cp-right-middle-container {
+  flex: 8 1 80%;
+  overflow-y: auto;
+  padding-inline: 20px;
+}
+
+.cp-right-middle-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100%;
+  gap: 5px;
+}
+
+.cp-right-bottom-container {
+  flex: 1 1 10%;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.cp-send-button {
+  display: flex;
+  cursor: pointer;
+  transform: rotate(180deg);
+}
+
+.message-flex {
+  display: flex;
+
+  &.my {
+    justify-content: end;
+  }
+}
+
+
+@media(max-width:v.$middlew) {
+  .cp-left-container {
+    flex: 0;
+  }
+}

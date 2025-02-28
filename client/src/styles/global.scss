@@ -9,6 +9,8 @@ $grey: #1A1A1A;
 $overgrey: #323232;
 $blue: #4F00ED;
 $background: #131313;
+$middlew: 1000px;
+$smallw: 500px;
 
 // Reset CSS - сбрасывает стили и задаёт базовые параметры
 *,
@@ -19,23 +21,25 @@ $background: #131313;
   box-sizing: border-box;
 }
 
-html {
+html, body, #root {
   font-size: 62.5%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
   background-color: $background; // Полностью черный фон
   color: #fff; // Белый текст для контраста
   font-family: 'SF-Pro', sans-serif;
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   min-height: 100dvh;
+  overflow: hidden;
+}
+
+.flex-body {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 100dvh;
 }
 
 
@@ -114,5 +118,56 @@ input {
 .greyed-text {
   color: $overgrey;
   font-size: 1.2rem;
-
 }
+
+.text-highlighter {
+  background-color: $grey;
+  border-radius: 10px;
+  padding: 10px;
+  transition: background-color 0.1s;
+  user-select: none;
+  z-index: 10;
+
+  &:hover {
+    background-color: $overgrey;
+  }
+}
+
+
+
+
+.cp-right-middle-container::-webkit-scrollbar {
+  width: 10px; /* Толщина полосы */
+  z-index: 9999;
+}
+
+.cp-right-middle-container::-webkit-scrollbar-track {
+  background: $grey; /* Цвет фона скроллбара */
+  border-radius: 10px; /* Закругление */
+  z-index: 9999;
+}
+
+.cp-right-middle-container::-webkit-scrollbar-thumb {
+  background: $overgrey; /* Цвет ползунка */
+  border-radius: 10px;
+  z-index: 9999;
+}
+
+@media(max-width: $middlew) {
+  .cp-right-middle-container {
+    scrollbar-width: none; /* Убирает скроллбар в Firefox */
+    -ms-overflow-style: none; /* Убирает скроллбар в IE и Edge */
+    z-index: 9999;
+  }
+  
+  .cp-right-middle-container::-webkit-scrollbar {
+    display: none; /* Убирает скроллбар в Chrome, Safari */
+    z-index: 9999;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+}
+
+

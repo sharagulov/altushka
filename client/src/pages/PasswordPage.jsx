@@ -20,20 +20,23 @@ function PasswordPage() {
   }
 
   return (
+  <div className="flex-body">
+
     <main>
       <h2 className='head-name'>Почти готово</h2>
-      <div className="center-block">
-        <div className='middle-block'>
+      <div className="pp-center-block">
+        <div className='pp-middle-block'>
           <span>Ваш пароль:</span>
-          <span className="password">{passwordFromUrl}</span>
+          <span className="text-highlighter">{passwordFromUrl}</span>
           <ClipboardIcon text={passwordFromUrl} />
         </div>
         <span className="greyed-text">Этот пароль можно потерять, ничего страшного.</span>
       </div>
-        <div className='footer-block '>
+      <div style={{ justifyContent: "center" }} className='footer-block'>
         <Button onClick={handleStart} variant="primary">Войти</Button>
       </div>
     </main>
+  </div>
   );
 }
 

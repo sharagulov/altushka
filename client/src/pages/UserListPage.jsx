@@ -72,6 +72,7 @@ export default function UserListPage() {
   };
 
   return (
+  <div className='flex-body'>
     <main className='user-page-main'>
       <div className='top-block'>
         <div className='header-row-block'>
@@ -96,5 +97,6 @@ export default function UserListPage() {
           ))}
       </div>
     </main>
+  </div>
   );
 }

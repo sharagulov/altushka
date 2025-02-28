@@ -1,0 +1,17 @@
+@use '@/styles/global.scss' as v;
+
+.msg-container {
+  border-radius: 9999px;
+  background-color: v.$grey;
+  padding: 10px 15px;
+  width: fit-content;
+}
+
+.msg-info-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+

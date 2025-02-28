@@ -1,5 +1,5 @@
 // altushka/client/src/pages/RegisterPage.jsx
-import React, {useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '@/styles/RPstyle.scss'
 import Button from '@/components/button/button'
@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const [clickedInstance, setClickedInstance] = useState(false);
   const navigate = useNavigate();
 
-  const usernameRegex = /^[1-9a-zA-Z_]+$/;
+  const usernameRegex = /^[а-яА-Я0-9a-zA-Z_]+$/;
   const onlyUnderscoresRegex = /^_+$/;
 
 
@@ -63,9 +63,6 @@ export default function RegisterPage() {
     }
 
     setClickedInstance(true);
-    setTimeout(() => {
-      setClickedInstance(false);
-    }, 7000)
 
     try {
       const res = await fetch('/api/register', {
@@ -85,9 +82,20 @@ export default function RegisterPage() {
     } catch (err) {
       console.error(err);
     }
+
+    
   };
+  
+  useEffect(() => {
+    let timeoutId;
+    if (clickedInstance) {
+      timeoutId = setTimeout(() => setClickedInstance(false), 7000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [clickedInstance]);
 
   return (
+  <div className='flex-body'>
     <main>
       <h2 className='head-name'>ALTUSHKA</h2>
       <div className={`header-block ${"no" + errorMessages.length}`} >
@@ -110,12 +118,13 @@ export default function RegisterPage() {
           </div>
         )}
       </div>
-      <span className="mobile-warning greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
+      <span className="mobile greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       <div className="footer-block"> 
         <Button variant="primary" onClick={handleRegister} disabled={isValid !== 1 || clickedInstance }>Продолжить</Button>
         <img src={loadingSvg} className={`${clickedInstance ? "clicked" : ""}`} alt="loading" />
-        <span className="warning greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
+        <span className="desktop greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
       </div>
     </main>
+  </div>
   );
 }

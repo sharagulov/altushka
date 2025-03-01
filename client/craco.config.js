@@ -1,7 +1,9 @@
 // craco.config.js
 const path = require('path');
 
-module.exports = {
+module.exports = {devServer: {
+  allowedHosts: "all"
+  },
   webpack: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

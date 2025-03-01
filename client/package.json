@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "WATCHPACK_POLLING=true craco start",
-    "build": "craco build",
+    "build": "craco build && sudo rm -rf /var/www/messenger-frontend/* && sudo cp -R build/* /var/www/messenger-frontend",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

@@ -1,0 +1,28 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id               String    @id @default(uuid())
+  username         String
+  generatedPassword String
+  messagesSent     Message[] @relation("MessageFrom")
+  messagesReceived Message[] @relation("MessageTo")
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  fromId      String
+  from        User     @relation("MessageFrom", fields: [fromId], references: [id])
+  toId        String
+  to          User     @relation("MessageTo", fields: [toId], references: [id])
+  text        String
+  created_at  DateTime @default(now())
+}

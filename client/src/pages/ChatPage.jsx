@@ -3,9 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getCookieValue } from "@/components/сookieValue.js";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
-import '@/styles/CPstyle.scss'
+import '@/styles/CPstyle.scss';
 
-import Message from '@/components/message/Message.jsx'
+import Message from '@/components/message/Message.jsx';
 
 export default function ChatPage() {
   const navigate = useNavigate();
@@ -14,80 +14,129 @@ export default function ChatPage() {
   const [historyData, setHistoryData] = useState([]);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [targetUser, setTargerUser] = useState({});
+  const [targetUser, setTargetUser] = useState({});
 
   const { userId: targetUserId } = useParams();
 
   const currentUser = getCookieValue("user");
-  const currentUserId = currentUser.id;
+  const currentUserId = currentUser?.id;
 
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
 
+  // --- 1) Загружаем информацию о собеседнике по ID ---
   useEffect(() => {
     fetch(`/api/users?search=${targetUserId}`)
       .then((res) => res.json())
-      .then((data) => setTargerUser(data[0]))
+      .then((data) => setTargetUser(data[0]))
       .catch((err) => console.error('Ошибка определения собеседника:', err));
   }, [targetUserId]);
 
+  // --- 2) Загружаем историю сообщений ---
   useEffect(() => {
+    if (!targetUser?.id) return;
     fetch(`/api/messages/${currentUserId}/${targetUser.id}`)
       .then((res) => res.json())
       .then((data) => setHistoryData(data))
       .catch((err) => console.error('Ошибка загрузки истории:', err));
   }, [currentUserId, targetUser]);
 
+  // --- 3) Создаём/обслуживаем WebSocket соединение ---
   useEffect(() => {
-    const isDev = window.location.hostname === 'localhost'; 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    
-    const wsHost = isDev ? 'localhost:3001' : window.location.host;
-    const wsURL = `${protocol}//${wsHost}`;
-    
-    const socket = new WebSocket(wsURL);
-    
-    socket.onopen = () => {
-      console.log('Вебсокет используется');
-      socket.send(JSON.stringify({
-        type: 'init',
-        userId: currentUserId
-      }));
+    if (!currentUserId) return;
+
+    const devWsURL = 'ws://localhost:3001';
+    const prodWsURL = 'wss://altushka.site/ws';
+    const wsURL = (window.location.hostname === 'localhost')
+      ? prodWsURL
+      : prodWsURL;
+
+    let socket = null;
+    let pingInterval = null;
+
+    const createWebSocket = () => {
+      console.log("[WS] Подключаемся к:", wsURL);
+      socket = new WebSocket(wsURL);
+
+      socket.onopen = () => {
+        console.log('[WS] Соединение установлено');
+        socket.send(JSON.stringify({
+          type: 'init',
+          userId: currentUserId
+        }));
+
+        pingInterval = setInterval(() => {
+          if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'ping' }));
+            console.log("Пингуем вебсокет");
+          }
+        }, 25000);
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+
+          if (data.type === 'pong') {
+            console.log("Вебсокет вернул понг")
+            return;
+          }
+
+          if (data.type === 'chat') {
+            setMessages((prev) => [...prev, data]);
+          }
+        } catch (err) {
+          console.error('Ошибка парсинга WebSocket-сообщения:', err);
+        }
+      };
+
+      socket.onerror = (err) => {
+        console.error('[WS] Ошибка вебсокета на клиентской стороне:', err);
+      };
+
+      socket.onclose = (event) => {
+        console.warn(`[WS] Соединение закрыто (код: ${event.code}, причина: ${event.reason})`);
+        clearInterval(pingInterval);
+        pingInterval = null;
+      };
+
+      setWs(socket);
     };
 
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === 'chat') {
-          setMessages((prev) => [...prev, data]);
-          console.log(data)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+          console.log('[WS] Вкладка активна -> переподключаемся к WS');
+          createWebSocket();
         }
-      } catch (err) {
-        console.error('Ошибка парсинга:', err);
       }
     };
-    
-    socket.onclose = () => {
-      console.log('Вебсокет не используется');
-    };
 
-    socket.onerror = (err) => {
-      console.log('Ошибка вебсокета на клиентской стороне', err);
-    };
-
-    setWs(socket);
+    createWebSocket();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      socket.close();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (socket) {
+        clearInterval(pingInterval);
+        socket.close();
+      }
     };
-  }, [currentUserId, navigate]);
+  }, [currentUserId]);
 
+  // --- 4) Скроллим вниз при появлении новых сообщений или обновлении истории ---
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [historyData, messages]);
 
+  // --- 5) Отправка нового сообщения ---
   const handleSend = () => {
     if (!inputValue.trim() || !ws) return;
+    if (ws.readyState !== WebSocket.OPEN) {
+      console.warn('[WS] Попытка отправить сообщение, когда сокет не открыт');
+      return;
+    }
+
     const msg = {
       type: 'chat',
       from: currentUserId,
@@ -96,7 +145,6 @@ export default function ChatPage() {
       created_at: Date.now(),
     };
     ws.send(JSON.stringify(msg));
-
     setMessages((prev) => [...prev, msg]);
     setInputValue('');
   };
@@ -107,14 +155,16 @@ export default function ChatPage() {
     <div>
       <div className='cp-global-container'>
         <div className='cp-left-container cp-container'>
+          {/* Если нужно, что-то здесь можно добавить */}
         </div>
         <div className='cp-right-container cp-container'>
           <div className='cp-right-top-container shadow-bottom cp-right cp-fc'>
             <div className='cp-back-button'>
               <IoChevronBackOutline size={30} />
             </div>
-            <h2>Чат с пользователем ID: {targetUser.username}</h2>
+            <h2>Чат с пользователем: {targetUser?.username}</h2>
           </div>
+
           <div className='cp-right-middle-container padding' ref={containerRef}>
             <div className='cp-right-middle-content'>
               {allMessages.map((m, i) => {
@@ -128,6 +178,7 @@ export default function ChatPage() {
               <div ref={bottomRef}></div>
             </div>
           </div>
+
           <div className='cp-right-bottom-container padding cp-right cp-fc'>
             <input
               value={inputValue}
@@ -136,7 +187,7 @@ export default function ChatPage() {
               placeholder='Написать сообщение...'
             />
             <div className='cp-send-button'>
-              <IoChevronBackOutline size={30} onClick={handleSend} />
+              <IoSend size={30} onClick={handleSend} />
             </div>
           </div>
         </div>

@@ -113,11 +113,16 @@ input {
   font-size: 1.6rem;
   padding-inline: 0.6em;
   transition: all 0.2s;
+  border: 1px solid $overgrey
 }
 
 .greyed-text {
   color: $overgrey;
   font-size: 1.2rem;
+}
+
+.colored-text {
+  color: $blue;
 }
 
 .text-highlighter {
@@ -165,9 +170,6 @@ input {
     z-index: 9999;
   }
 
-  h2 {
-    font-size: 1.6rem;
-  }
 }
 
 

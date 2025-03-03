@@ -1,3 +1,5 @@
+// /root/common/altushka/client/src/styles/RPstyle.scss
+
 @use '@/styles/global.scss' as v;
 
 main {
@@ -21,7 +23,7 @@ main {
   transition: height 0.5s ease;
   height: 70px;
 }
-.header-block.no1 {
+.header-block.no0 {
   height: 70px;
 }
 .header-block.no1 {
@@ -42,6 +44,12 @@ main {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 input.error {
@@ -84,20 +92,16 @@ input.ok {
   }
 }
 
-img {
- display: block;
- animation: spin 1.5s infinite linear; 
- overflow: hidden;
- transition: width 0.5s ease;
- width: 0px;
+.img-svg {
+  display: block;
+  animation: spin 1.5s infinite linear; 
+  overflow: hidden;
+  transition: width 0.5s ease;
+  width: 0px;
 
- &.clicked {
-  width: 40px;
-
-  @media(max-width: 500px) {
-    width: 20px;
+  &.clicked {
+    width: 40px;
   }
- }
 }
 
 @keyframes spin {
@@ -105,15 +109,34 @@ img {
   100% {transform: rotate(359deg);}
 }
 
-.desktop {
-  @media(max-width: 500px) {
+
+.login-ask {
+  text-align: center;
+}
+
+
+@media(max-width: v.$smallw) {
+  .desktop {
+    display: none
+  }
+
+  img.clicked {
+    width: 20px;
+  }
+
+  .footer-block {
+    justify-content: center;
+    padding-left: 15px;
+  }
+
+  .img-svg.clicked {
+    width: 20px;
+  }
+
+}
+
+@media(min-width: v.$smallw) {
+  .mobile {
     display: none
   }
 }
-
-.mobile  {
-  @media(min-width: 500px) {
-    display: none
-  }
-}
-

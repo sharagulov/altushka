@@ -1,7 +1,7 @@
 @use '../../styles/global.scss' as v;
 
 .btn {
-  display: flex;
+
   align-items: center;
   justify-content: center;
   
@@ -19,15 +19,14 @@
   color: white;
 }
 
-.btn-secondary {
-  background-color: gray;
-  color: white;
+.btn-skelet {
+  background-color: transparent;
+  color: v.$blue;
+  padding: 0;
+  font-size: 1.2rem;
 }
 
-.btn-danger {
-  background-color: red;
-  color: white;
-}
+
 
 .btn:not(:disabled):hover {
   opacity: 0.8;

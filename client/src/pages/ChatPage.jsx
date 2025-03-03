@@ -1,9 +1,12 @@
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCookieValue } from "@/components/сookieValue.js";
+import { jwtDecode } from 'jwt-decode';
 import { IoChevronBackOutline } from "react-icons/io5";
-import { IoSend } from "react-icons/io5";
 import '@/styles/CPstyle.scss';
+
+
 
 import Message from '@/components/message/Message.jsx';
 
@@ -18,8 +21,8 @@ export default function ChatPage() {
 
   const { userId: targetUserId } = useParams();
 
-  const currentUser = getCookieValue("user");
-  const currentUserId = currentUser?.id;
+  const accessToken = localStorage.getItem('accessToken');
+  const currentUserId = accessToken ? jwtDecode(accessToken).userId : null;
 
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
@@ -45,11 +48,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (!currentUserId) return;
 
-    const devWsURL = 'ws://localhost:3001';
-    const prodWsURL = 'wss://altushka.site/ws';
-    const wsURL = (window.location.hostname === 'localhost')
-      ? prodWsURL
-      : prodWsURL;
+    const wsURL = 'wss://altushka.site/ws';
 
     let socket = null;
     let pingInterval = null;
@@ -76,7 +75,7 @@ export default function ChatPage() {
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-
+          console.log(data)
           if (data.type === 'pong') {
             console.log("Вебсокет вернул понг")
             return;
@@ -139,12 +138,13 @@ export default function ChatPage() {
 
     const msg = {
       type: 'chat',
-      from: currentUserId,
-      to: targetUser.id,
+      fromId: currentUserId,
+      toId: targetUser.id,
       text: inputValue,
       created_at: Date.now(),
     };
     ws.send(JSON.stringify(msg));
+    console.log(msg)
     setMessages((prev) => [...prev, msg]);
     setInputValue('');
   };
@@ -152,46 +152,39 @@ export default function ChatPage() {
   const allMessages = [...historyData, ...messages];
 
   return (
-    <div>
-      <div className='cp-global-container'>
-        <div className='cp-left-container cp-container'>
-          {/* Если нужно, что-то здесь можно добавить */}
+    <>
+      <div className='cp-right-top-container shadow-bottom cp-right cp-fc'>
+        <div className='cp-back-button'>
+          <IoChevronBackOutline size={30} />
         </div>
-        <div className='cp-right-container cp-container'>
-          <div className='cp-right-top-container shadow-bottom cp-right cp-fc'>
-            <div className='cp-back-button'>
-              <IoChevronBackOutline size={30} />
-            </div>
-            <h2>Чат с пользователем: {targetUser?.username}</h2>
-          </div>
+        <h2>Чат с пользователем: {targetUser?.username}</h2>
+      </div>
 
-          <div className='cp-right-middle-container padding' ref={containerRef}>
-            <div className='cp-right-middle-content'>
-              {allMessages.map((m, i) => {
-                const isMe = m.from === currentUserId;
-                return (
-                  <div key={i} className={`message-flex ${isMe ? "my" : ""}`}>
-                    <Message text={m.text} time={m.created_at} />
-                  </div>
-                );
-              })}
-              <div ref={bottomRef}></div>
-            </div>
-          </div>
-
-          <div className='cp-right-bottom-container padding cp-right cp-fc'>
-            <input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder='Написать сообщение...'
-            />
-            <div className='cp-send-button'>
-              <IoSend size={30} onClick={handleSend} />
-            </div>
-          </div>
+      <div className='cp-right-middle-container padding' ref={containerRef}>
+        <div className='cp-right-middle-content'>
+          {allMessages.map((m, i) => {
+            const isMe = m.fromId === currentUserId;
+            return (
+              <div key={i} className={`message-flex ${isMe ? "my" : ""}`}>
+                <Message text={m.text} time={m.created_at} />
+              </div>
+            );
+          })}
+          <div ref={bottomRef}></div>
         </div>
       </div>
-    </div>
+
+      <div className='cp-right-bottom-container padding cp-right cp-fc'>
+        <input
+           value={inputValue}
+           onChange={(e) => setInputValue(e.target.value)}
+           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+           placeholder='Написать сообщение...'
+        />
+        <div className='cp-send-button'>
+          <IoChevronBackOutline size={30} onClick={handleSend} />
+        </div>
+      </div>
+    </>
   );
 }

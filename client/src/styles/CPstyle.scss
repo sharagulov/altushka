@@ -1,3 +1,5 @@
+// /root/common/altushka/client/src/styles/CPstyle.scss
+
 @use '@/styles/global.scss' as v;
 
 .cp-fc {
@@ -41,6 +43,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-inline: 20px;
+  padding-top: 10px;
 }
 
 .cp-right-middle-content {
@@ -54,7 +57,7 @@
 .cp-right-bottom-container {
   flex: 1 1 10%;
   display: flex;
-  gap: 20px;
+
   align-items: center;
 }
 
@@ -76,7 +79,8 @@
 
 @media(max-width:v.$middlew) {
   .cp-left-container {
-    flex: 0;
+    display: none;
     border: none
   }
+
 }

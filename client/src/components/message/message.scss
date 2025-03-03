@@ -4,7 +4,7 @@
   border-radius: 20px;
   background-color: v.$grey;
   padding: 10px 15px;
-  max-width: 45%;
+  max-width: 45% !important;
 
   @media (max-width:v.$smallw) {
     max-width: 65%;
@@ -15,11 +15,15 @@
 .msg-info-container {
   display: flex;
   justify-content: space-between;
-  gap: 15px;
+  gap: 10px;
   align-items: flex-end; 
 }
 
+
 .msg-text-container {
-  word-break: b
+  overflow-wrap: break-word; // Переносит длинные слова, если нет пробелов
+  word-break: break-word; // Работает в WebKit, помогает в некоторых случаях
+  white-space: pre-wrap; // Сохраняет пробелы, но позволяет перенос слов
 }
+
 

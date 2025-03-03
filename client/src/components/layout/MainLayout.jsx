@@ -1,25 +1,35 @@
-// /root/common/altushka/client/src/components/layout/MainLayout.jsx
+// MainLayout.jsx
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import UserList from '@/components/userList/UserList';
 
-import '@/styles/UPstyle.scss';
-import '@/styles/CPstyle.scss';
+import '@/styles/CPstyle.scss'; // здесь у вас .cp-global-container и т.п.
 
+// Мы считаем, что если путь начинается с '/chat/',
+// то это «режим чата», иначе — «режим списка» ("/").
 export default function MainLayout() {
+  const location = useLocation();
+  const isChatRoute = location.pathname.startsWith('/chat/');
+
   return (
     <div className="cp-global-container">
-      {/* Левый блок: UserList (не будет размонтироваться при переходах) */}
-      <div className="cp-left-container cp-container">
+      {/* Левая колонка */}
+      <div
+        className={
+          isChatRoute ? 'cp-left-container hide-on-mobile' : 'cp-left-container'
+        }
+      >
         <UserList />
       </div>
 
-      {/* Правый блок: здесь будут рендериться конкретные страницы */}
-      <div className="cp-right-container cp-container">
+      {/* Правая колонка */}
+      <div
+        className={
+          !isChatRoute ? 'cp-right-container hide-on-mobile' : 'cp-right-container'
+        }
+      >
         <Outlet />
       </div>
     </div>
   );
 }
-
-// лабы проскура - в 1-й мет. номер 3, во 2-й мет. номер 4. 3872

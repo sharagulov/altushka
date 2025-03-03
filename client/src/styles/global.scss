@@ -6,7 +6,9 @@
 }
 
 $grey: #1A1A1A;
+$postgrey: #222222;
 $overgrey: #323232;
+$supergrey: #626262;
 $blue: #4F00ED;
 $background: #131313;
 $middlew: 1000px;
@@ -113,12 +115,23 @@ input {
   font-size: 1.6rem;
   padding-inline: 0.6em;
   transition: all 0.2s;
-  border: 1px solid $overgrey
+
 }
 
 .greyed-text {
   color: $overgrey;
   font-size: 1.2rem;
+}
+.super-greyed-text {
+  color: $supergrey;
+  font-size: 1.2rem;
+}
+
+.greyed-span-text {
+  color: $overgrey;
+}
+.super-greyed-span-text {
+  color: $supergrey;
 }
 
 .colored-text {

@@ -20,6 +20,10 @@
   border-right: 1px solid v.$overgrey;
   background-color: v.$grey;
   max-width: 700px;
+
+  input {
+    background-color: v.$overgrey;
+  }
 }
 
 .cp-right-container {
@@ -67,6 +71,10 @@
   transform: rotate(180deg);
 }
 
+.cp-back-button {
+  cursor: pointer;
+}
+
 .message-flex {
   display: flex;
   
@@ -78,9 +86,16 @@
 
 
 @media(max-width:v.$middlew) {
+
   .cp-left-container {
-    display: none;
-    border: none
+    max-width: 1000px;
+  }
+
+  .hide-on-mobile {
+    @media (max-width: 1000px) {
+      display: none !important;
+    }
   }
 
 }
+

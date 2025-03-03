@@ -140,7 +140,7 @@ export default function ChatPage() {
       type: 'chat',
       fromId: currentUserId,
       toId: targetUser.id,
-      text: inputValue,
+      text: inputValue.trim(),
       created_at: Date.now(),
     };
     ws.send(JSON.stringify(msg));
@@ -154,8 +154,8 @@ export default function ChatPage() {
   return (
     <>
       <div className='cp-right-top-container shadow-bottom cp-right cp-fc'>
-        <div className='cp-back-button'>
-          <IoChevronBackOutline size={30} />
+        <div className='cp-back-button' onClick={() => navigate("/")}>
+          <IoChevronBackOutline size={30}  />
         </div>
         <h2>Чат с пользователем: {targetUser?.username}</h2>
       </div>

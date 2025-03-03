@@ -1,7 +1,7 @@
 // "/root/common/altushka/client/src/components/userList/UserList.jsx"
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { IoIosSearch } from "react-icons/io";
 import '@/styles/UPstyle.scss';
@@ -17,6 +17,10 @@ export default function UserListPage() {
   const [user, setUser] = useState({})
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const pathUsername = location.pathname.split("/").pop()
+  console.log(pathUsername)
 
   const accessToken = localStorage.getItem('accessToken');
   const currentUserId = accessToken ? jwtDecode(accessToken).userId : null;
@@ -94,11 +98,14 @@ export default function UserListPage() {
         <div className='chats-block'>
           {users
             .filter((u) => u.id !== currentUserId) // Исключаем самого себя
-            .map((u) => (
+            .map((u) => {
+              const highlight = u.username === pathUsername;
+              return (
               <div key={u.id}>
-                <UserComponent to={`/chat/${u.username}`} user={u}/>
+                <UserComponent user={u} highlight={highlight}/>
               </div>
-            ))}
+              )
+            })}
         </div>
       </main>
   );

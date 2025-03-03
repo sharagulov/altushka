@@ -10,7 +10,6 @@ export default function User({ user, highlight }) {
   const navigate = useNavigate()
 
   const time = getNormalTime(user.lastMessage?.created_at)
-  console.log(highlight);
 
   return (
     <div className={`user-component ${highlight ? "highlight" : ""}`} onClick={() => navigate(`/chat/${user.username}`)}> 
@@ -22,8 +21,8 @@ export default function User({ user, highlight }) {
             <span className='greyed-text'>{time}</span> 
           </div>
           {user.id !== user.lastMessage?.fromId
-          ? <span className='super-greyed-span-text'>Вы: <span className='super-greyed-span-text'>{user.lastMessage?.text}</span></span>
-          : <span className='super-greyed-span-text'>{user.username.slice(1)}: <span className='super-greyed-span-text'>{user.lastMessage?.text}</span></span>}
+          ? <span className='super-greyed-span-text user-last-message'>Вы: <span className='super-greyed-span-text'>{user.lastMessage?.text}</span></span>
+          : <span className='super-greyed-span-text user-last-message'>{user.username.slice(1)}: <span className='super-greyed-span-text '>{user.lastMessage?.text}</span></span>}
            
         </div>
       </div>

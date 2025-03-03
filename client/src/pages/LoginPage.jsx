@@ -23,7 +23,6 @@ export default function RegisterPage() {
     }
 
     setIsValid((value.length > 1) ? 1 : 2)
-    console.log(value.length, isValid)
     setUsername(value);
   };
 

@@ -1,15 +1,14 @@
 import React from 'react';
 import './message.scss'
+import getNormalTime from '@/components/utils/utils'
 
-export default function Message({ text, time }) {
-  const sendTime = new Date(time).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-
-
+export default function Message({ message, highlight }) {
+  const sendTime = getNormalTime(message.created_at)
   return (
-    <div className='msg-container'>
+    <div className={`msg-container ${highlight ? "highlight" : ""}`}>
       <div className='msg-info-container'>
-        <span className='msg-text-container'>{text}</span>
-        <span className='greyed-text'>{sendTime}</span>
+        <span className='msg-text'>{message.text}</span>
+        <span className={`greyed-text msg-send-time ${highlight ? "highlight" : ""}`}>{sendTime}</span>
       </div>
     </div>
   );

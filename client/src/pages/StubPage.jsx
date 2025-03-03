@@ -3,9 +3,8 @@ import React from 'react';
 
 export default function StubPage() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Привет!</h2>
-      <p>Это просто заглушка на правой стороне экрана.</p>
+    <div style={{ display:"flex", flexDirection:"column", gap:"10px", justifyContent:"center", alignItems:"center", height:"100dvh" }}>
+      <span>Не выбран ни один чат.</span>
     </div>
   );
 }

@@ -20,7 +20,6 @@ export default function UserListPage() {
 
   const location = useLocation();
   const pathUsername = location.pathname.split("/").pop()
-  console.log(pathUsername)
 
   const accessToken = localStorage.getItem('accessToken');
   const currentUserId = accessToken ? jwtDecode(accessToken).userId : null;
@@ -31,12 +30,8 @@ export default function UserListPage() {
     fetch(`/api/me/${currentUserId}`)
       .then((res) => res.json())
       .then((data) => {
-        if(!search) {
           setChattedUsers(data.chats);
           setUser(data.user)
-        }
-        
-        console.log(data.chats);
       })
       .catch((err) => console.error("Ошибка загрузки информации о пользователе:", err));
   }, [currentUserId]);
@@ -71,9 +66,7 @@ export default function UserListPage() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearch(value);
-    console.log(currentUserId)
-
-    if (!value.trim()) {
+    if (value.trim().length === 0) {
       setUsers(chattedUsers);
     } else {
       setUsers(allUsers.filter((user) => user.username.toLowerCase().includes(value.toLowerCase())));

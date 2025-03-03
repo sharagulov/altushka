@@ -27,6 +27,7 @@
 }
 
 .user-text-component {
+  min-width: 0; // Чтобы текст не ломал flex-контейнер
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -36,7 +37,6 @@
 
 .user-top-text-component {
   display: flex;
-
   justify-content: space-between;
 }
 
@@ -46,4 +46,14 @@
   height: 40px !important;
   background-color: v.$overgrey;
   border-radius: 9999px;
+}
+
+.user-last-message {
+  max-width: 100%;
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1; 
 }

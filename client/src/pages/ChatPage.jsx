@@ -67,7 +67,7 @@ export default function ChatPage() {
         pingInterval = setInterval(() => {
           if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: 'ping' }));
-            console.log("Пингуем вебсокет");
+            console.log("Кидаем серверу ping");
           }
         }, 25000);
       };
@@ -75,19 +75,29 @@ export default function ChatPage() {
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log(data)
+          
           if (data.type === 'pong') {
-            console.log("Вебсокет вернул понг")
+            console.log("Сервер вернул pong")
             return;
           }
-
+      
           if (data.type === 'chat') {
-            setMessages((prev) => [...prev, data]);
+            // Проверяем, это сообщение в текущий чат?
+            const isMyChat =
+              (data.fromId === currentUserId && data.toId === targetUser.id) ||
+              (data.fromId === targetUser.id && data.toId === currentUserId);
+      
+            if (isMyChat) {
+              setMessages((prev) => [...prev, data]);
+            } else {
+              console.log('Пришло сообщение, но не для этого чата:', data);
+            }
           }
         } catch (err) {
           console.error('Ошибка парсинга WebSocket-сообщения:', err);
         }
       };
+      
 
       socket.onerror = (err) => {
         console.error('[WS] Ошибка вебсокета на клиентской стороне:', err);
@@ -144,7 +154,6 @@ export default function ChatPage() {
       created_at: Date.now(),
     };
     ws.send(JSON.stringify(msg));
-    console.log(msg)
     setMessages((prev) => [...prev, msg]);
     setInputValue('');
   };
@@ -166,7 +175,7 @@ export default function ChatPage() {
             const isMe = m.fromId === currentUserId;
             return (
               <div key={i} className={`message-flex ${isMe ? "my" : ""}`}>
-                <Message text={m.text} time={m.created_at} />
+                <Message message={m} highlight={isMe}/>
               </div>
             );
           })}

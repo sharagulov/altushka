@@ -53,8 +53,6 @@ export default function RegisterPage() {
       setErrorMessages([]);
       setIsValid(0);
     }
-
-    console.log(errorMessages, isValid)
   
     setUsername(value);
   };
@@ -80,8 +78,6 @@ export default function RegisterPage() {
       setErrorPassMessages([]);
       setIsValidPass(0);
     }
-
-    console.log(errorPassMessages, isValidPass, (isValid !== 1 && isValidPass !== 1) || clickedInstance)
   
     setPassword(value);
   };

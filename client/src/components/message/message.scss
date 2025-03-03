@@ -1,16 +1,22 @@
 @use '@/styles/global.scss' as v;
 
 .msg-container {
+  max-width: 45%;
   border-radius: 20px;
-  background-color: v.$grey;
   padding: 10px 15px;
-  max-width: 45% !important;
+
+  background-color: v.$grey;
 
   @media (max-width:v.$smallw) {
     max-width: 65%;
   }
-}
 
+  @media (min-width:v.$hugew) {
+    &.highlight {
+      background-color: v.$overgrey;
+    }
+  }
+}
 
 .msg-info-container {
   display: flex;
@@ -20,10 +26,18 @@
 }
 
 
-.msg-text-container {
+.msg-text {
   overflow-wrap: break-word; // Переносит длинные слова, если нет пробелов
   word-break: break-word; // Работает в WebKit, помогает в некоторых случаях
-  white-space: pre-wrap; // Сохраняет пробелы, но позволяет перенос слов
+  white-space: normal; // Сохраняет пробелы, но позволяет перенос слов
 }
 
+.msg-send-time {
+  user-select: none;
+  @media (min-width:v.$hugew) {
+    &.highlight {
+      color: v.$supergrey;
+    }
+  }
+}
 

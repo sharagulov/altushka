@@ -13,7 +13,7 @@
 
   @media (min-width:v.$hugew) {
     &.highlight {
-      background-color: v.$overgrey;
+      background-color: v.$postgrey;
     }
   }
 }
@@ -36,7 +36,7 @@
   user-select: none;
   @media (min-width:v.$hugew) {
     &.highlight {
-      color: v.$supergrey;
+      color: v.$overgrey;
     }
   }
 }

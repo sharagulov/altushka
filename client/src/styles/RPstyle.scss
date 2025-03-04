@@ -23,15 +23,19 @@ main {
   transition: height 0.5s ease;
   height: 70px;
 }
+
 .header-block.no0 {
   height: 70px;
 }
+
 .header-block.no1 {
   height: 110px;
 }
+
 .header-block.no2 {
   height: 140px;
 }
+
 .header-block.no3 {
   height: 170px;
 }
@@ -57,7 +61,7 @@ input.error {
 }
 
 input.ok {
-  border: 1px solid v.$blue;
+  border: 1px solid v.$accent;
 }
 
 .footer-block {
@@ -87,31 +91,23 @@ input.ok {
   &:hover {
     background-color: v.$overgrey;
   }
+
   &.clicked {
     background-color: v.$overgrey;
   }
 }
 
-.img-svg {
-  display: block;
-  animation: spin 1.5s infinite linear; 
-  overflow: hidden;
-  transition: width 0.5s ease;
-  width: 0px;
-
-  &.clicked {
-    width: 40px;
-  }
-}
-
-@keyframes spin {
-  0% {transform: rotate(0deg);}
-  100% {transform: rotate(359deg);}
+.mobile {
+  text-align: center;
 }
 
 
 .login-ask {
   text-align: center;
+}
+
+.login-error-message {
+  width: 100%;
 }
 
 
@@ -133,10 +129,17 @@ input.ok {
     width: 20px;
   }
 
+  main {
+    width: 100%;
+    margin: 0px;
+    padding-inline: 20px;
+  }
+
 }
 
 @media(min-width: v.$smallw) {
   .mobile {
     display: none
+    
   }
 }

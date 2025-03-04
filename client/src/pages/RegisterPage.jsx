@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '@/styles/RPstyle.scss'
 import Button from '@/components/button/button'
 import loadingSvg from '@/assets/vectors/loading.svg';
+import { useCurtain } from "@/contexts/CurtainContext";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('@');
@@ -14,6 +15,7 @@ export default function RegisterPage() {
   const [isValidPass, setIsValidPass] = useState(0);
   const [clickedInstance, setClickedInstance] = useState(false);
   const navigate = useNavigate();
+  const { showCurtain, hideCurtain } = useCurtain();
 
   const usernameRegex = /^[а-яА-Я0-9a-zA-Z_]+$/;
   const onlyUnderscoresRegex = /^_+$/;
@@ -116,7 +118,11 @@ export default function RegisterPage() {
   };
 
   const handleGoToLogin = async () => {
-    navigate("/login");
+    showCurtain(1000);
+    const navigateTimeout = setTimeout(() => {
+      navigate("/login");
+    }, 200)
+    return () => clearTimeout(navigateTimeout)
   }
   
   useEffect(() => {

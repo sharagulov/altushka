@@ -7,7 +7,6 @@ export const RedirectIfNotAuthenticated = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
-        console.log(token, "RedirectIfNotAuthenticated");
 
         if (!token) {
             navigate('/login'); // Если нет токена — отправляем на страницу входа
@@ -23,7 +22,6 @@ export const RedirectIfAuthenticated = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
-        console.log(token, "RedirectIfAuthenticated");
 
         if (token) {
             navigate('/'); // Если уже авторизован, отправляем в /users

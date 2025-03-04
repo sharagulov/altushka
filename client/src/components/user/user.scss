@@ -11,6 +11,25 @@
   border-radius: 5px;
   margin-bottom: 5px;
   
+  &.searched {
+    height: 40px;
+    padding: 4px 10px;
+    align-items: center;
+
+    .user-last-message {
+      display: none;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+    }
+
+    .user-last-time {
+      display: none;
+    }
+  }
+  
   &:hover {
     background-color: v.$postgrey;
   }
@@ -24,10 +43,11 @@
   display: flex;
   gap: 20px;
   width: 100%;
+  align-items: center;
 }
 
 .user-text-component {
-  min-width: 0; // Чтобы текст не ломал flex-контейнер
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -42,8 +62,8 @@
 
 .user-avatar {
   flex-shrink: 0 !important;
-  width: 40px !important;
-  height: 40px !important;
+  width: 40px;
+  height: 40px;
   background-color: v.$overgrey;
   border-radius: 9999px;
 }

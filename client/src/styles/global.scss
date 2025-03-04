@@ -3,6 +3,7 @@
   src: url('../assets/fonts/SF-Pro.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 $background: #131313;
@@ -10,7 +11,9 @@ $grey: #1A1A1A;
 $postgrey: #222222;
 $overgrey: #323232;
 $supergrey: #626262;
-$blue: #4F00ED;
+$greytext: #535353;
+$accent: #4F00ED;
+$error: #b62323;
 $hugew: 2500px;
 $bigw: 1500px;
 $middlew: 1000px;
@@ -23,9 +26,12 @@ $smallw: 500px;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
 
-html, body, #root {
+html,
+body,
+#root {
   font-size: 62.5%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -66,7 +72,12 @@ textarea {
 }
 
 // Стили для основных текстовых тегов
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 500;
   line-height: 1;
 }
@@ -103,7 +114,8 @@ table {
   width: 100%;
 }
 
-th, td {
+th,
+td {
   padding: 0.5rem;
   text-align: left;
   border-bottom: 1px solid #333;
@@ -121,23 +133,30 @@ input {
 }
 
 .greyed-text {
-  color: $overgrey;
+  color: $greytext;
   font-size: 1.2rem;
 }
+
 .super-greyed-text {
   color: $supergrey;
   font-size: 1.2rem;
 }
 
 .greyed-span-text {
-  color: $overgrey;
+  color: $greytext;
 }
+
 .super-greyed-span-text {
   color: $supergrey;
 }
 
 .colored-text {
-  color: $blue;
+  color: $accent;
+}
+
+.error-text {
+  color: $error;
+  font-size: 1.2rem;
 }
 
 .text-highlighter {
@@ -153,38 +172,105 @@ input {
   }
 }
 
+.display-none {
+  display: none;
+}
+
 
 
 
 .cp-right-middle-container::-webkit-scrollbar {
-  width: 10px; /* Толщина полосы */
+  width: 10px;
+  /* Толщина полосы */
   z-index: 9999;
 }
 
 .cp-right-middle-container::-webkit-scrollbar-track {
-  background: $grey; /* Цвет фона скроллбара */
-  border-radius: 10px; /* Закругление */
+  background: $grey;
+  /* Цвет фона скроллбара */
+  border-radius: 10px;
+  /* Закругление */
   z-index: 9999;
 }
 
 .cp-right-middle-container::-webkit-scrollbar-thumb {
-  background: $overgrey; /* Цвет ползунка */
+  background: $overgrey;
+  /* Цвет ползунка */
   border-radius: 10px;
   z-index: 9999;
 }
 
 @media(max-width: $middlew) {
   .cp-right-middle-container {
-    scrollbar-width: none; /* Убирает скроллбар в Firefox */
-    -ms-overflow-style: none; /* Убирает скроллбар в IE и Edge */
+    scrollbar-width: none;
+    /* Убирает скроллбар в Firefox */
+    -ms-overflow-style: none;
+    /* Убирает скроллбар в IE и Edge */
     z-index: 9999;
   }
-  
+
   .cp-right-middle-container::-webkit-scrollbar {
-    display: none; /* Убирает скроллбар в Chrome, Safari */
+    display: none;
+    /* Убирает скроллбар в Chrome, Safari */
     z-index: 9999;
   }
 
 }
 
+/* Общий класс skeleton */
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(90deg, $grey 0%, $overgrey 25%, $grey 50%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  color: transparent; /* Убираем текст */
+  border-radius: 4px;
+  user-select: none; /* Запрещаем выделение */
+}
 
+/* Автоматически подгоняем размеры */
+h2.skeleton {
+  width: 100%;
+  height: 100%;
+}
+
+p.skeleton {
+  width: 100%;
+  height: 100%;
+}
+
+/* keyframes для анимации */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+
+
+
+.img-svg {
+  display: block;
+  animation: spin 1.5s infinite linear;
+  overflow: hidden;
+  transition: width 0.5s ease;
+  width: 0px;
+  flex-shrink: 0 !important;
+
+  &.clicked {
+    width: 20px !important;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(359deg);
+  }
+}

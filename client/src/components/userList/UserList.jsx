@@ -92,10 +92,11 @@ export default function UserListPage() {
           {users
             .filter((u) => u.id !== currentUserId) // Исключаем самого себя
             .map((u) => {
+              const searched = users[0]?.hasOwnProperty('lastMessage') ?? false;
               const highlight = u.username === pathUsername;
               return (
               <div key={u.id}>
-                <UserComponent user={u} highlight={highlight}/>
+                <UserComponent searched={!searched} user={u} highlight={highlight}/>
               </div>
               )
             })}

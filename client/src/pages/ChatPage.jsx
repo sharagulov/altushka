@@ -20,7 +20,7 @@ export default function ChatPage() {
   const [targetUser, setTargetUser] = useState({});
 
   const { userId: targetUserId } = useParams();
-
+  
   const accessToken = localStorage.getItem('accessToken');
   const currentUserId = accessToken ? jwtDecode(accessToken).userId : null;
 
@@ -43,6 +43,21 @@ export default function ChatPage() {
       .then((data) => setHistoryData(data))
       .catch((err) => console.error('Ошибка загрузки истории:', err));
   }, [currentUserId, targetUser]);
+
+
+
+  useEffect(() => {
+    if (targetUser?.id === currentUserId) navigate('/')
+    setMessages([]);
+  }, [targetUser]);
+  
+  useEffect(() => {
+    return () => {
+      setMessages([]);
+    };
+  }, []);
+
+
 
   // --- 3) Создаём/обслуживаем WebSocket соединение ---
   useEffect(() => {
@@ -67,7 +82,6 @@ export default function ChatPage() {
         pingInterval = setInterval(() => {
           if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: 'ping' }));
-            console.log("Кидаем серверу ping");
           }
         }, 25000);
       };
@@ -77,7 +91,6 @@ export default function ChatPage() {
           const data = JSON.parse(event.data);
           
           if (data.type === 'pong') {
-            console.log("Сервер вернул pong")
             return;
           }
       

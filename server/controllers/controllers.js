@@ -29,13 +29,13 @@ const login = async (req, res) => {
     const { username, password } = req.body;
 
     const user = await prisma.user.findFirst({ where: { username } });
-    if (!user) return res.status(400).json({ error: 'Неверные учетные данные' });
+    if (!user) return res.status(400).json({ error: 'Введены неверные учетные данные. Вы не альтушка?' });
 
     const isValid = await bcrypt.compare(password, user.passwordHash);
-    if (!isValid) return res.status(400).json({ error: 'Неверные учетные данные' });
+    if (!isValid) return res.status(400).json({ error: 'Введен неверный пароль от сердца альтушки' });
 
     const tokenData = generateTokens(user.id);
-    res.json({ message: 'Вход выполнен', ...tokenData });
+    res.json({ message: "", ...tokenData });
 };
 
 // Обновление токена

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { IoChevronBackOutline } from "react-icons/io5";
+import { HiChevronLeft } from "react-icons/hi";
 import '@/styles/CPstyle.scss';
 
 
@@ -20,6 +20,7 @@ export default function ChatPage() {
   const [inputValue, setInputValue] = useState('');
   const [targetUser, setTargetUser] = useState({});
   const [showMessages, setShowMessages] = useState(false);
+  const [showCompanion, setShowCompanion] = useState(false);
 
   const { userId: targetUserId } = useParams();
   
@@ -158,21 +159,38 @@ export default function ChatPage() {
 
   // --- 4) Скроллим вниз при появлении новых сообщений или обновлении истории ---
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: 'instant' });
   }, [historyData, messages, showMessages]);
 
 
   useEffect(() => {
     setShowMessages(false);
+    setShowCompanion(false);
   }, [targetUserId]);
 
+
+  const isVisible = () => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    return rect && rect.bottom <= window.innerHeight;
+  };
+  
+
   useEffect(() => {
+    if (historyData.length === 0) return;
     const timerId = setTimeout(() => {
       setShowMessages(true);
-    }, 1000);
-
+    }, 200);
     return () => clearTimeout(timerId);
   }, [historyData]);
+
+  useEffect(() => {
+    if (!targetUser?.id) return;
+    const timerId = setTimeout(() => {
+      setShowCompanion(true);
+    }, 200);
+
+    return () => clearTimeout(timerId);
+  }, [targetUser]);
 
 
 
@@ -202,13 +220,14 @@ export default function ChatPage() {
     <>
       <div className='cp-right-top-container shadow-bottom cp-right cp-fc'>
         <div className='cp-back-button' onClick={() => navigate("/")}>
-          <IoChevronBackOutline size={30}  />
+          <HiChevronLeft  size={30}  />
         </div>
-        <h2>Чат с пользователем: {targetUser?.username}</h2>
+        <h2 className={`cp-companion ${showCompanion}-context`}>{targetUser?.username}</h2>
+        <div className={`skeleton cp-companion-skeleton ${showCompanion}-context`}/>
       </div>
 
         
-        <div className='cp-right-middle-container padding' ref={containerRef}>
+      <div className='cp-right-middle-container padding' ref={containerRef}>
 
           <div className={`cp-right-middle-content ${showMessages ? "show-real-messages" : "hide-real-messages"}`}>
             {allMessages.map((m, i) => {
@@ -227,8 +246,6 @@ export default function ChatPage() {
           </div>
         </div>
         
-      
-
       <div className='cp-right-bottom-container padding cp-right cp-fc'>
         <input
            value={inputValue}
@@ -237,7 +254,7 @@ export default function ChatPage() {
            placeholder='Написать сообщение...'
         />
         <div className='cp-send-button'>
-          <IoChevronBackOutline size={30} onClick={handleSend} />
+          <HiChevronLeft  size={30} onClick={handleSend} />
         </div>
       </div>
     </>

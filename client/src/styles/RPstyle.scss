@@ -128,9 +128,15 @@ input.ok {
   main {
     width: 100%;
     margin: 0px;
-    padding-inline: 20px;
+    
   }
 
+}
+
+@media(max-width: v.$middlew) {
+  main {
+    padding-inline: 20px;
+  }
 }
 
 @media(min-width: v.$smallw) {

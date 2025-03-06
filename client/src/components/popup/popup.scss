@@ -1,0 +1,81 @@
+@use '@/styles/global.scss' as v;
+
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+
+}
+
+.popup-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Анимация самого контента */
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 400px;
+
+  background: v.$grey;
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 10000;
+  
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.popup-overlay.visible .popup-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popup-middle {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 10001;
+}
+
+.popup-close {
+  color: v.$supergrey;
+  cursor: pointer;
+
+  &:hover {
+    color: white;
+  }
+}
+
+
+
+@media (max-width:v.$smallw) {
+  .popup-content {
+    width: 100%;
+    height: 100dvh;
+  }
+}
+
+
+.user-avatar {
+  flex-shrink: 0 !important;
+  width: 40px;
+  height: 40px;
+  background-color: v.$overgrey;
+  border-radius: 9999px;
+}

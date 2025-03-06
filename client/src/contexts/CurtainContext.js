@@ -29,10 +29,6 @@ export function CurtainProvider({ children }) {
   };
 
   useEffect(() => {
-    showCurtain(1500);
-  }, []);
-
-  useEffect(() => {
     const from = prevLocation.current;
     const to = location.pathname;
 

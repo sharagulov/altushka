@@ -220,10 +220,9 @@ input {
 /* Общий класс skeleton */
 .skeleton {
   display: inline-block;
-  background: linear-gradient(90deg, $grey 0%, $overgrey 25%, $grey 50%);
+  background: linear-gradient(90deg, $grey 0%, $accent 25%, $grey 50%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite ease-in-out;
-  border-radius: 20px;
   color: transparent;
   user-select: none;
 }
@@ -273,4 +272,26 @@ input {
     width: 70px;
     height: 70px;
   }
+}
+
+
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: $postgrey;
+}
+
+.pointer {
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+  color: $supergrey;
+
+  &:hover {
+    color: white;
+  }
+}
+
+.unchosable {
+  user-select: none;
+  pointer-events: none;
 }

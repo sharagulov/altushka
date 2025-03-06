@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCopy } from "react-icons/fi";
+import { HiClipboardCopy } from "react-icons/hi";
 import '../styles/global.scss'
 import '../styles/RPstyle.scss'
 
@@ -33,7 +33,7 @@ const ClipboardIcon = ({ text }) => {
 
   return (
     <div onClick={handleCopy} className={`my-icon ${copied ? "clicked" : ""}`}>
-      <FiCopy size={15} />
+      <HiClipboardCopy size={15} />
     </div>
   );
 };

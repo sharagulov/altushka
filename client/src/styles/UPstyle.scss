@@ -25,17 +25,113 @@
 }
 
 .chats-block {
+  position: relative;
   padding: 0px 10px;
+  height: fit-content;
+
+  .skeleton-chats-overlay {
+    padding: 0px 10px;
+    opacity: 0;
+    position: absolute;
+    height: 100%;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: start; // чтобы скелеты шли "снизу"
+    pointer-events: none;
+    overflow: hidden; // так не будет появляться доп. скролл
+    gap: 5px;
+    
+    
+    
+    &.show-skeleton-chats {
+      transition: opacity 0.25s ease-in-out, background-color 0.25s ease-in-out;
+      opacity: 1;
+      background-color: v.$grey;
+    }
+    
+    &.hide-skeleton-chats {
+      transition: opacity 0.25s ease-in-out, background-color 0.25s ease-in-out;
+      opacity: 0;
+      background-color: transparent;
+    }
+
+  }
 }
+
+
+
+.up-user-skeleton {
+  width: 200px;
+  height: 20px;
+  border-radius: 5px;
+
+  
+  &.true-context {
+    transition: opacity 0.25s ease-in-out, width 0.01s linear 0.25s;
+    width: 0px;
+    opacity: 0;
+  }
+  &.false-context {
+    transition: opacity 0.25s ease-in-out, width 0.01s linear;
+    width: 100px;
+    opacity: 1;
+  }
+}
+
+.up-user {
+  position: absolute;
+  left: 20px;
+  
+  &.true-context {
+    transition: opacity 0.25s ease-in-out 0.25s, width 0.01s linear 0.25s;
+    width: 100px;
+    opacity: 1;
+  }
+
+  &.false-context {
+    width: 0px;
+    opacity: 0;
+  }
+}
+
+
+
 
 @media(max-width:v.$smallw) {
 
   .chats-block {
     padding: 0;
+    
   }
 
   .top-block {
     padding: 0px 10px;
+  }
+
+}
+
+
+@media(max-width:v.$middlew) {
+
+  .skeleton-chats-overlay {
+    &.show-skeleton-chats {
+      background-color: v.$background !important;
+    }
+  }
+
+}
+
+.popup-info-block {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+
+  .popup-info-text-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
 }

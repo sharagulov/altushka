@@ -27,7 +27,7 @@ export default function User({ user, highlight, searched }) {
   return (
     <div className={`user-component ${highlight ? "highlight" : ""} ${searched ? "searched" : ""}`} onClick={handleGoToChat}> 
       <div className="user-flex-component">
-        <div className='user-avatar'></div>
+        <div className='user-avatar'/>
         <div className='user-text-component'>
           <div className='user-top-text-component'>
             <span>{user.username.slice(1)}</span> 

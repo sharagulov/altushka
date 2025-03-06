@@ -1,8 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+
+
 import { CurtainProvider } from '@/contexts/CurtainContext';
 import CurtainOverlay from '@/components/curtain/CurtainComponent';
+import { PopupProvider } from '@/contexts/PopupContext'; // Импортируем PopupProvider
+import PopupComponent from '@/components/popup/PopupComponent'; // Импортируем сам попап
 
 import RegisterPage from '@/pages/RegisterPage';
 import LoginPage from '@/pages/LoginPage';
@@ -18,8 +22,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <CurtainProvider>
+        <PopupProvider> 
         {/* Занавес поверх всех страниц */}
         <CurtainOverlay />
+        <PopupComponent />
 
         <Routes>
           {/* Публичные (регистрация, логин) */}
@@ -56,6 +62,7 @@ export default function App() {
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </PopupProvider>
       </CurtainProvider>
     </BrowserRouter>
   );

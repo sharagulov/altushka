@@ -50,7 +50,7 @@ const getRandomHint = () => {
         <div className='page-logo '>
           <img src="/nbg_logo192.png" alt="altushka logo" />
         </div>
-        <div className='curtain-loading skeleton'></div>
+        <div className='skeleton curtain-loading'/>
         <span className='super-greyed-span-text'>{randomHint}</span>
       </div>
     </div>

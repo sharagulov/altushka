@@ -3,7 +3,7 @@
   top: 0; left: 0;
   width: 100vw; height: 100vh;
   background: black;
-  z-index: 9999; 
+  z-index: 11000; 
   opacity: 0;
   pointer-events: none;  // в скрытом состоянии не кликабельно
   transition: opacity 0.3s ease-in-out;
@@ -29,4 +29,5 @@
   width: 300px;
   height: 15px;
   margin-bottom: 15px;
+  border-radius: 200px;
 }

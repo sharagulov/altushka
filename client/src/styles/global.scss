@@ -6,7 +6,7 @@
   font-display: swap;
 }
 
-$background: #101010;
+$background: #131313;
 $grey: #1A1A1A;
 $postgrey: #222222;
 $overgrey: #323232;
@@ -220,7 +220,7 @@ input {
 /* Общий класс skeleton */
 .skeleton {
   display: inline-block;
-  background: linear-gradient(90deg, $grey 0%, $accent 25%, $grey 50%);
+  background: linear-gradient(90deg, $grey 0%, $overgrey 25%, $grey 50%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite ease-in-out;
   color: transparent;
@@ -282,6 +282,7 @@ input {
 }
 
 .pointer {
+  display: flex;
   cursor: pointer;
   transition: color 0.15s ease-in-out;
   color: $supergrey;

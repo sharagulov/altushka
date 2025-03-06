@@ -33,7 +33,13 @@
   z-index: 10000;
   
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  @media (max-width:v.$smallw) {
+    transform: translateY(100dvh); /* Немного выше */
+    transition: opacity 0.3s ease, transform 0.5s ease-in-out;
+  }
+  transition: opacity 0.3s ease;
+  margin-top: 40px;
 }
 
 .popup-overlay.visible .popup-content {

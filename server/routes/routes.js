@@ -1,3 +1,5 @@
+// /root/common/altushka/server/routes/routes.js
+
 const express = require('express');
 const { register, login, refreshToken, getUsers, getMessages, getUser } = require('../controllers/controllers');
 

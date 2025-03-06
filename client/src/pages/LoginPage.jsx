@@ -99,7 +99,7 @@ export default function RegisterPage() {
   <div className='flex-body'>
     <main>
       
-      <h2 className='head-name'>Авторизация 💫</h2>
+      <h2 className='head-name'>Авторизация</h2>
         <div className='inputs'>
           <div className={`header-block`} >
 

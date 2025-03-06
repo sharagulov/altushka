@@ -1,3 +1,5 @@
+// /root/common/altushka/server/server.js
+
 const path = require('path');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -18,10 +20,21 @@ const prisma = new PrismaClient();
 const PORT = 3001;
 const sockets = {};
 
+app.get('/api/onlineStatus', (req, res) => {
+  const { userId } = req.query;
+  if (!userId) {
+    return res.status(400).json({ error: 'Параметр userId обязателен' });
+  }
+  const isOnline = sockets[userId] && sockets[userId].readyState === WebSocket.OPEN;
+  res.json({ online: isOnline, checker: sockets });
+});
+
+
 // ------------------- ВЕБСОКЕТЫ ------------------- //
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+
 
 wss.on('connection', (ws) => {
     console.log('Замечено новое вебсокет-соединение');
@@ -33,11 +46,12 @@ wss.on('connection', (ws) => {
             if (data.type === 'init') {
                 sockets[data.userId] = ws;
                 console.log(`Пользователь c ID ${data.userId} подключился по вебсокету`);
+                broadcastOnlineStatus(data.userId, true);
                 return;
             }
 
             if (data.type === 'ping') {
-                ws.send(JSON.stringify({ type: 'pong' }));
+              ws.send(JSON.stringify({ type: 'pong' }));
             }
 
             if (data.type === 'chat') {
@@ -69,12 +83,12 @@ wss.on('connection', (ws) => {
     });
 
     ws.on('close', () => {
-        console.log('Вебсокет закрыт');
-        Object.keys(sockets).forEach((key) => {
-            if (sockets[key] === ws) {
-                delete sockets[key];
-            }
-        });
+      console.log('Вебсокет закрыт');
+      Object.keys(sockets).forEach((key) => {
+        if (sockets[key] === ws) {
+          delete sockets[key];
+        }
+      });
     });
 });
 

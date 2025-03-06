@@ -153,7 +153,7 @@ export default function RegisterPage() {
   <div className='flex-body'>
     <main>
   
-      <h2 className='head-name'>Регистрация 💫</h2>
+      <h2 className='head-name'>Регистрация</h2>
         <div className='inputs'>
           <div className={`header-block ${"no" + errorMessages.length}`} >
 

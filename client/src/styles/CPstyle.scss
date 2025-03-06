@@ -38,6 +38,7 @@
 }
 
 .cp-right-top-container {
+  position: relative;
   flex: 1 1 10%;
   display: flex;
   align-items: center;
@@ -117,8 +118,8 @@
   width: 100px;
   height: 20px;
   border-radius: 5px;
-  position: relative;
-  left: -20px;
+  position: absolute;
+  left: 50px;
   
   &.true-context {
     transition: opacity 0.25s ease-in-out, width 0.01s linear 0.25s;
@@ -133,14 +134,17 @@
 }
 
 .cp-companion {
+  display: flex;
+  gap: 10px;
+  align-items: end;
   
   &.true-context {
     transition: opacity 0.25s ease-in-out 0.25s, width 0.01s linear 0.25s;
-    width: 100px;
+    width: fit-content;
     opacity: 1;
   }
-  &.false-context {
 
+  &.false-context {
     width: 0px;
     opacity: 0;
   }

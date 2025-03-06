@@ -109,7 +109,7 @@ export default function UserListPage() {
       <main className='user-page-main'>
         <div className='top-block'>
           <div className='header-row-block' >
-            <div>
+            <div className='up-loadable-block'>
               <span className={`up-user ${showUser}-context`}>Чаты <span className='colored-text'>{user?.username}</span></span>
               <div className={`skeleton up-user-skeleton ${showUser}-context`}/>
             </div>

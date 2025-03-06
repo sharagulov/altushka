@@ -21,6 +21,8 @@ export default function ChatPage() {
   const [targetUser, setTargetUser] = useState({});
   const [showMessages, setShowMessages] = useState(false);
   const [showCompanion, setShowCompanion] = useState(false);
+  const [isUserOnline, setIsUserOnline] = useState(false);
+
 
   const { userId: targetUserId } = useParams();
   
@@ -54,6 +56,28 @@ export default function ChatPage() {
   }, [currentUserId, targetUser]);
 
 
+  useEffect(() => {
+    if (!targetUser?.id) return;
+  
+    const checkOnlineStatus = () => {
+      fetch(`/api/onlineStatus?userId=${targetUser?.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setIsUserOnline(data.online);
+        })
+        .catch((err) => console.error('Ошибка при проверке online-статуса:', err));
+    };
+  
+    // Запрашиваем сразу
+    checkOnlineStatus();
+    // И можно опрашивать каждые 10 секунд
+    const intervalId = setInterval(checkOnlineStatus, 10000);
+  
+    return () => clearInterval(intervalId);
+  }, [targetUser?.id]);
+  
+
+
 
   useEffect(() => {
     if (targetUser?.id === currentUserId) navigate('/')
@@ -70,6 +94,7 @@ export default function ChatPage() {
 
   // --- 3) Создаём/обслуживаем WebSocket соединение ---
   useEffect(() => {
+    console.log("RECON")
     if (!currentUserId || !targetUser?.id) return;
 
 
@@ -93,7 +118,7 @@ export default function ChatPage() {
           if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: 'ping' }));
           }
-        }, 25000);
+        }, 1000);
       };
 
       socket.onmessage = (event) => {
@@ -103,10 +128,9 @@ export default function ChatPage() {
           if (data.type === 'pong') {
             return;
           }
+
       
           if (data.type === 'chat') {
-            console.log( data.fromId, targetUser.id, data.toId,  currentUserId)
-            // Проверяем, это сообщение в текущий чат?
             const isMyChat =
               (data.fromId === currentUserId && data.toId === targetUser.id) ||
               (data.fromId === targetUser.id && data.toId === currentUserId);
@@ -220,9 +244,12 @@ export default function ChatPage() {
     <>
       <div className='cp-right-top-container shadow-bottom cp-right cp-fc'>
         <div className='cp-back-button' onClick={() => navigate("/")}>
-          <HiChevronLeft  size={30}  />
+          <HiChevronLeft size={30}  />
         </div>
-        <h2 className={`cp-companion ${showCompanion}-context`}>{targetUser?.username}</h2>
+        <div className={`cp-companion ${showCompanion}-context`}>
+          <h2>{targetUser?.username} </h2>
+          <span style={{lineHeight:"0.8"}} className='greyed-text'>{isUserOnline ? 'онлайн' : 'был(а) недавно'}</span>
+        </div>
         <div className={`skeleton cp-companion-skeleton ${showCompanion}-context`}/>
       </div>
 

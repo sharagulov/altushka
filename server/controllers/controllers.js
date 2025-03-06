@@ -1,3 +1,5 @@
+// /root/common/altushka/server/controllers/controllers.js
+
 const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
 const { generateTokens, validateRefreshToken, tokens } = require('../utils/tokenUtils');

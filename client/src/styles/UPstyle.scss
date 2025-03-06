@@ -27,3 +27,15 @@
 .chats-block {
   padding: 0px 10px;
 }
+
+@media(max-width:v.$smallw) {
+
+  .chats-block {
+    padding: 0;
+  }
+
+  .top-block {
+    padding: 0px 10px;
+  }
+
+}

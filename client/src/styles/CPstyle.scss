@@ -47,20 +47,66 @@
 }
 
 .cp-right-middle-container {
+  position: relative;
   flex: 8 1 80%;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding-inline: 20px;
   padding-top: 10px;
+
+  .cp-right-middle-content {
+    opacity: 0;
+    transition: opacity 0.25s ease-in-out 0.26s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 100%;
+    gap: 5px;
+
+    &.show-real-messages {
+      opacity: 1;
+    }
+
+    &.hide-real-messages {
+      transition: none;
+      opacity: 0;
+    }
+
+  }
+
+  .skeleton-overlay {
+    opacity: 0;
+    position: sticky;
+    height: 0px;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; // чтобы скелеты шли "снизу"
+    pointer-events: none;
+    overflow: hidden; // так не будет появляться доп. скролл
+    gap: 5px;
+    
+    transition: opacity 0.25s ease-in-out, height 0.01s ease-in-out;
+    
+    
+    &.show-skeleton-messages {
+      opacity: 1;
+      height: 500px;
+    }
+    
+    &.hide-skeleton-messages {
+      transition: opacity 0.25s ease-in-out, height 0.01s ease-in-out 0.25s;
+      opacity: 0;
+      height: 0px;
+    }
+
+  }
+  
+  
+
 }
 
-.cp-right-middle-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: 100%;
-  gap: 5px;
-}
 
 .cp-right-bottom-container {
   flex: 1 1 10%;
@@ -102,7 +148,7 @@
   .hide-on-mobile {
     @media (max-width: 1000px) {
       display: none !important;
-    }
+;    }
   }
 
 }

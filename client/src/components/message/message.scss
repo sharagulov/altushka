@@ -1,11 +1,16 @@
 @use '@/styles/global.scss' as v;
 
 .msg-container {
+  animation: appear-rev 0.15s ease-in-out;
   max-width: 45%;
   border-radius: 20px;
   padding: 10px 15px;
-
+  
   background-color: v.$grey;
+  
+  &.highlight {
+    animation: appear 0.15s ease-in-out;
+  }
 
   @media (max-width:v.$smallw) {
     max-width: 65%;
@@ -41,3 +46,25 @@
   }
 }
 
+@keyframes appear {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+@keyframes appear-rev {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

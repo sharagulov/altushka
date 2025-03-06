@@ -19,8 +19,7 @@ const register = async (req, res) => {
         const tokenData = generateTokens(newUser.id);
         res.json({ message: 'Регистрация успешна', ...tokenData });
     } catch (err) {
-        console.error('Ошибка регистрации:', err);
-        res.status(500).json({ error: 'Ошибка сервера' });
+        res.status(500).json({ error: 'Хм... Кажется, альтушка упала. Попробую ее поднять.' });
     }
 };
 
@@ -32,10 +31,10 @@ const login = async (req, res) => {
     if (!user) return res.status(400).json({ error: 'Введены неверные учетные данные. Вы не альтушка?' });
 
     const isValid = await bcrypt.compare(password, user.passwordHash);
-    if (!isValid) return res.status(400).json({ error: 'Введен неверный пароль от сердца альтушки' });
+    if (!isValid) return res.status(400).json({ error: 'Неверный пароль от сердца юной дамы, но она даёт второй шанс.' });
 
     const tokenData = generateTokens(user.id);
-    res.json({ message: "", ...tokenData });
+    res.json({ message: 'Авторизация успешна', ...tokenData });
 };
 
 // Обновление токена

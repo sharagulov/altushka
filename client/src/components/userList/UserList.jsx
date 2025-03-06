@@ -90,6 +90,7 @@ export default function UserListPage() {
         </div>
         <div className='chats-block'>
           {users
+            .sort((a, b) => {return new Date (b.lastMessage?.created_at).getTime() - new Date (a.lastMessage?.created_at).getTime()})
             .filter((u) => u.id !== currentUserId) // Исключаем самого себя
             .map((u) => {
               const searched = users[0]?.hasOwnProperty('lastMessage') ?? false;

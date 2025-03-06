@@ -57,6 +57,7 @@ wss.on('connection', (ws) => {
                     targetSocket.send(JSON.stringify({
                         type: 'chat',
                         fromId,
+                        toId,
                         text,
                         created_at: newMsg.created_at
                     }));

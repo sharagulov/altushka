@@ -1,5 +1,5 @@
 // altushka/client/src/pages/RegisterPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '@/styles/RPstyle.scss'
 import Button from '@/components/button/button'
@@ -10,6 +10,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState('@');
   const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState([])
+  const [errorMessage, setErrorMessage] = useState([])
   const [errorPassMessages, setErrorPassMessages] = useState([])
   const [isValid, setIsValid] = useState(0);
   const [isValidPass, setIsValidPass] = useState(0);
@@ -19,6 +20,10 @@ export default function RegisterPage() {
 
   const usernameRegex = /^[а-яА-Я0-9a-zA-Z_]+$/;
   const onlyUnderscoresRegex = /^_+$/;
+
+  const errorTimeoutRef = useRef(null);
+  const navigateTimeoutRef = useRef(null);
+  const instanceTimeoutRef = useRef(null);
 
 
   
@@ -109,6 +114,9 @@ export default function RegisterPage() {
           navigate(`/`);
         }, 2000)
       } else {
+        errorTimeoutRef.current = setTimeout(() => {
+          setErrorMessage(data.error || 'Ошибка регистрации');
+        }, 1000)
         console.log(data.error || 'Ошибка регистрации');
       }
 
@@ -118,24 +126,33 @@ export default function RegisterPage() {
   };
 
   const handleGoToLogin = async () => {
-    showCurtain(1000);
-    const navigateTimeout = setTimeout(() => {
+    showCurtain(1500);
+    navigateTimeoutRef.current = setTimeout(() => {
       navigate("/login");
     }, 200)
-    return () => clearTimeout(navigateTimeout)
+    return () => clearTimeout(navigateTimeoutRef.current);
   }
   
   useEffect(() => {
-    let timeoutId;
     if (clickedInstance) {
-      timeoutId = setTimeout(() => setClickedInstance(false), 7000);
+      instanceTimeoutRef.current = setTimeout(() => setClickedInstance(false), 7000);
     }
-    return () => clearTimeout(timeoutId);
+    return () => clearTimeout(instanceTimeoutRef.current);
   }, [clickedInstance]);
+
+  useEffect(() => {
+    return () => {
+      if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
+      if (instanceTimeoutRef.current) clearTimeout(instanceTimeoutRef.current);
+      if (navigateTimeoutRef.current) clearTimeout(navigateTimeoutRef.current);
+    };
+  }, []);
+
 
   return (
   <div className='flex-body'>
     <main>
+  
       <h2 className='head-name'>Регистрация 💫</h2>
         <div className='inputs'>
           <div className={`header-block ${"no" + errorMessages.length}`} >
@@ -180,14 +197,16 @@ export default function RegisterPage() {
           </div>
         </div>
 
-      <span className="mobile greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
+        {errorMessage.length !== 0 ? (<span className='error-text login-error-message mobile'>{errorMessage}</span>) : (<span className="mobile greyed-text">Пет-проект. Не храните здесь важную информацию.</span>)}
       <div className="footer-block"> 
         <Button variant="primary" onClick={handleRegister} disabled={isValid !== 1 || isValidPass !== 1 || clickedInstance }>Регистрация</Button>
         <img src={loadingSvg} className={`img-svg ${clickedInstance ? "clicked" : ""}`} alt="loading" />
-        <span className="desktop greyed-text">Генерация временного аккаунта. Не храните здесь важную информацию.</span>
+        {errorMessage.length !== 0 ? (<span className='error-text login-error-message desktop'>{errorMessage}</span>) : (<span className="desktop greyed-text">Пет-проект. Не храните здесь важную информацию.</span>)}
       </div>
       <div className="login-ask greyed-text">Есть аккаунт? <Button variant="skelet" onClick={handleGoToLogin}>Войти</Button></div>
-      
+      <div className='page-logo desktop'>
+        <img src="/nbg_logo192.png" alt="altushka logo" />
+      </div>
     </main>
   </div>
   );

@@ -3,7 +3,7 @@ import './message.scss'
 import getNormalTime from '@/components/utils/utils'
 
 export default function Message({ message, highlight }) {
-  const sendTime = getNormalTime(message.created_at)
+  const sendTime = getNormalTime(message.created_at, "message")
   return (
     <div className={`msg-container ${highlight ? "highlight" : ""}`}>
       <div className='msg-info-container'>

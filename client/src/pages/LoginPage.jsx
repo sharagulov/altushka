@@ -70,7 +70,7 @@ export default function RegisterPage() {
 
 
   const handleGoToRegister = async () => {
-    showCurtain(1000);
+    showCurtain(1500);
     navigateTimeoutRef.current = setTimeout(() => {
       navigate("/register");
     }, 200)
@@ -98,6 +98,7 @@ export default function RegisterPage() {
   return (
   <div className='flex-body'>
     <main>
+      
       <h2 className='head-name'>Авторизация 💫</h2>
         <div className='inputs'>
           <div className={`header-block`} >
@@ -129,17 +130,19 @@ export default function RegisterPage() {
           </div>
 
         </div>
-      <span className="mobile greyed-text">Убедитесь, что даннные введены корректно.</span>
+        {errorMessage.length !== 0 ? (<span className='error-text login-error-message mobile'>{errorMessage}</span>) : (<span className="mobile greyed-text">Убедитесь, что даннные введены корректно.</span>)}
 
       
       <div className="footer-block "> 
         <Button variant="primary" onClick={handleLogin} disabled={username.length < 2 || !password}>Продолжить</Button>
         <img src={loadingSvg} className={`img-svg ${clickedInstance ? "clicked" : ""}`} alt="loading" />
-        {errorMessage.length !== 0 ? (<span className='error-text login-error-message'>{errorMessage}</span>) : (<span className="desktop greyed-text">Убедитесь, что даннные введены корректно.</span>)}
+        {errorMessage.length !== 0 ? (<span className='error-text login-error-message desktop'>{errorMessage}</span>) : (<span className="desktop greyed-text">Убедитесь, что даннные введены корректно.</span>)}
         
       </div>
       <span className=" login-ask greyed-text">Нет аккаунта? <Button variant="skelet" onClick={handleGoToRegister}>Регистрация</Button></span>
-      
+      <div className='page-logo desktop'>
+        <img src="/nbg_logo192.png" alt="altushka logo" />
+      </div>
     </main>
   </div>
   );

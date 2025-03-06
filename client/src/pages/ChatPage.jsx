@@ -1,6 +1,6 @@
 
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { IoChevronBackOutline } from "react-icons/io5";
@@ -9,6 +9,7 @@ import '@/styles/CPstyle.scss';
 
 
 import Message from '@/components/message/Message.jsx';
+import SkeletonMessages from '@/components/skeleton/SkeletonMessages';
 
 export default function ChatPage() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [targetUser, setTargetUser] = useState({});
+  const [showMessages, setShowMessages] = useState(false);
 
   const { userId: targetUserId } = useParams();
   
@@ -31,16 +33,22 @@ export default function ChatPage() {
   useEffect(() => {
     fetch(`/api/users?search=${targetUserId}`)
       .then((res) => res.json())
-      .then((data) => setTargetUser(data[0]))
+      .then((data) => {
+        setTargetUser(data[0]);
+      })
       .catch((err) => console.error('Ошибка определения собеседника:', err));
   }, [targetUserId]);
 
   // --- 2) Загружаем историю сообщений ---
+
   useEffect(() => {
     if (!targetUser?.id) return;
+  
     fetch(`/api/messages/${currentUserId}/${targetUser.id}`)
       .then((res) => res.json())
-      .then((data) => setHistoryData(data))
+      .then((data) => {
+          setHistoryData(data);
+      })
       .catch((err) => console.error('Ошибка загрузки истории:', err));
   }, [currentUserId, targetUser]);
 
@@ -61,7 +69,8 @@ export default function ChatPage() {
 
   // --- 3) Создаём/обслуживаем WebSocket соединение ---
   useEffect(() => {
-    if (!currentUserId) return;
+    if (!currentUserId || !targetUser?.id) return;
+
 
     const wsURL = 'wss://altushka.site/ws';
 
@@ -95,6 +104,7 @@ export default function ChatPage() {
           }
       
           if (data.type === 'chat') {
+            console.log( data.fromId, targetUser.id, data.toId,  currentUserId)
             // Проверяем, это сообщение в текущий чат?
             const isMyChat =
               (data.fromId === currentUserId && data.toId === targetUser.id) ||
@@ -144,12 +154,27 @@ export default function ChatPage() {
         socket.close();
       }
     };
-  }, [currentUserId]);
+  }, [currentUserId, targetUser]);
 
   // --- 4) Скроллим вниз при появлении новых сообщений или обновлении истории ---
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [historyData, messages]);
+  }, [historyData, messages, showMessages]);
+
+
+  useEffect(() => {
+    setShowMessages(false);
+  }, [targetUserId]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setShowMessages(true);
+    }, 1000);
+
+    return () => clearTimeout(timerId);
+  }, [historyData]);
+
+
 
   // --- 5) Отправка нового сообщения ---
   const handleSend = () => {
@@ -182,19 +207,27 @@ export default function ChatPage() {
         <h2>Чат с пользователем: {targetUser?.username}</h2>
       </div>
 
-      <div className='cp-right-middle-container padding' ref={containerRef}>
-        <div className='cp-right-middle-content'>
-          {allMessages.map((m, i) => {
-            const isMe = m.fromId === currentUserId;
-            return (
-              <div key={i} className={`message-flex ${isMe ? "my" : ""}`}>
-                <Message message={m} highlight={isMe}/>
-              </div>
-            );
-          })}
-          <div ref={bottomRef}></div>
+        
+        <div className='cp-right-middle-container padding' ref={containerRef}>
+
+          <div className={`cp-right-middle-content ${showMessages ? "show-real-messages" : "hide-real-messages"}`}>
+            {allMessages.map((m, i) => {
+              const isMe = m.fromId === currentUserId;
+              return (
+                <div key={i} className={`message-flex ${isMe ? "my" : ""}`}>
+                  <Message message={m} highlight={isMe}/>
+                </div>
+              );
+            })}
+            <div ref={bottomRef}></div>
+          </div>
+
+          <div className={`skeleton-overlay ${!showMessages ? "show-skeleton-messages" : "hide-skeleton-messages"}`}>
+            <SkeletonMessages />
+          </div>
         </div>
-      </div>
+        
+      
 
       <div className='cp-right-bottom-container padding cp-right cp-fc'>
         <input

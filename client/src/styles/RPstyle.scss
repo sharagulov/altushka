@@ -106,14 +106,10 @@ input.ok {
   text-align: center;
 }
 
-.login-error-message {
-  width: 100%;
-}
-
 
 @media(max-width: v.$smallw) {
   .desktop {
-    display: none
+    display: none !important
   }
 
   img.clicked {
@@ -139,7 +135,6 @@ input.ok {
 
 @media(min-width: v.$smallw) {
   .mobile {
-    display: none
-    
+    display: none !important
   }
 }

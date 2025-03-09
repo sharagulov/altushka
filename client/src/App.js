@@ -60,7 +60,6 @@ export default function App() {
             <Route path="password" element={<PasswordPage />} />
           </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         </PopupProvider>
       </CurtainProvider>

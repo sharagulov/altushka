@@ -13,6 +13,7 @@ model User {
   id               String    @id @default(uuid())
   username         String    
   passwordHash     String
+  avatarUrl        String?
   messagesSent     Message[] @relation("MessageFrom")
   messagesReceived Message[] @relation("MessageTo")
 }

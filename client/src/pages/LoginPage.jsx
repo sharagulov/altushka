@@ -7,7 +7,7 @@ import loadingSvg from '@/assets/vectors/loading.svg';
 import { useCurtain } from "@/contexts/CurtainContext";
 
 export default function RegisterPage() {
-  const [username, setUsername] = useState('@');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState("")
   const [isValid, setIsValid] = useState(0);
@@ -24,10 +24,6 @@ export default function RegisterPage() {
   
   const handleUsernameChange = (e) => {
     let value = e.target.value.trim();
-
-    if (!value.startsWith('@')) {
-      value = '@' + value.replace(/^@+/, '');
-    }
 
     setIsValid((value.length > 1) ? 1 : 2)
     setUsername(value);

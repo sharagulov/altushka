@@ -46,7 +46,6 @@ wss.on('connection', (ws) => {
             if (data.type === 'init') {
                 sockets[data.userId] = ws;
                 console.log(`Пользователь c ID ${data.userId} подключился по вебсокету`);
-                broadcastOnlineStatus(data.userId, true);
                 return;
             }
 

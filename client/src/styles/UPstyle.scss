@@ -5,8 +5,8 @@
 .user-page-main {
   max-width: 100%;
   margin-inline: 0px;
-  margin-top: 20px;
   justify-content: start;
+  height: 100%;
 }
 
 .header-row-block {
@@ -25,10 +25,12 @@
 }
 
 .chats-block {
+  overflow: scroll;
   position: relative;
-  padding: 0px 10px;
+  padding: 0px 20px;
   height: fit-content;
-  min-height: 463.33px;
+  min-height: 100px;
+
 
   .skeleton-chats-overlay {
     padding: 0px 20px;
@@ -44,6 +46,9 @@
     overflow: hidden; // так не будет появляться доп. скролл
     gap: 5px;
     
+    @media (max-width:v.$smallw) {
+      padding: 0px 10px;
+    }
     
     
     &.show-skeleton-chats {
@@ -60,18 +65,28 @@
 
   }
 }
- .up-loadable-block {
-  
-  width: 100%;
-  height: 100%;
- }
+
+
+.up-avatar-block {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+
+  .up-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
 
 .up-user-skeleton {
   width: 200px;
   height: 20px;
   border-radius: 5px;
   position: absolute;
-  left: 0; top: 0;
+  right: 0; bottom: 10px;
 
   
   &.true-context {
@@ -88,9 +103,9 @@
 
 .up-user {
   display: flex;
+  align-items: center;
   gap: 10px;
-  align-items: end;
-  
+
   &.true-context {
     transition: opacity 0.25s ease-in-out 0.25s, width 0.01s linear 0.25s;
     width: fit-content;
@@ -104,16 +119,18 @@
 }
 
 
-
+.no-users {
+  text-align: center;
+}
 
 @media(max-width:v.$smallw) {
 
   .user-page-main {
-    margin-top: 40px;
+    margin-top: 20px;
   }
 
   .chats-block {
-    padding: 0;
+    padding: 0px 10px;
   }
 
   .up-user {
@@ -133,19 +150,6 @@
     &.show-skeleton-chats {
       background-color: v.$background !important;
     }
-  }
-
-}
-
-.popup-info-block {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-
-  .popup-info-text-block {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
   }
 
 }

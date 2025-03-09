@@ -94,7 +94,6 @@ export default function ChatPage() {
 
   // --- 3) Создаём/обслуживаем WebSocket соединение ---
   useEffect(() => {
-    console.log("RECON")
     if (!currentUserId || !targetUser?.id) return;
 
 
@@ -216,8 +215,6 @@ export default function ChatPage() {
     return () => clearTimeout(timerId);
   }, [targetUser]);
 
-
-
   // --- 5) Отправка нового сообщения ---
   const handleSend = () => {
     if (!inputValue.trim() || !ws) return;
@@ -238,7 +235,10 @@ export default function ChatPage() {
     setInputValue('');
   };
 
-  const allMessages = [...historyData, ...messages];
+  let allMessages;
+  if (Array.isArray(historyData)) {
+    allMessages = [...historyData, ...messages];
+  }
 
   return (
     <>
@@ -257,17 +257,17 @@ export default function ChatPage() {
       <div className='cp-right-middle-container padding' ref={containerRef}>
 
           <div className={`cp-right-middle-content ${showMessages ? "show-real-messages" : "hide-real-messages"}`}>
-            {allMessages.map((m, i) => {
+            {allMessages ? allMessages.map((m, i) => {
               const isMe = m.fromId === currentUserId;
               return (
                 <div key={i} className={`message-flex ${isMe ? "my" : ""}`}>
                   <Message message={m} highlight={isMe}/>
                 </div>
               );
-            })}
+            }) : null}
             <div ref={bottomRef}></div>
           </div>
-
+          
           <div className={`skeleton-overlay ${!showMessages ? "show-skeleton-messages" : "hide-skeleton-messages"}`}>
             <SkeletonMessages />
           </div>

@@ -35,7 +35,6 @@
   cursor: pointer;
   display: flex;
   gap: 10px;
-  color: v.$error;
   justify-content: start;
   align-items: center;
   padding: 10px;
@@ -44,10 +43,18 @@
 
   &:hover {
     background-color: v.$postgrey;
+
+  }
+  
+  &.highlight-true {
+    background-color: v.$postgrey;
   }
 
 }
 
+.errorr {
+  color: v.$error;
+}
 
 
 
@@ -58,4 +65,10 @@
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.disabled-true {
+  opacity: 0.5;
+  cursor: not-allowed;
+  user-select: none;
 }

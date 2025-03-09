@@ -8,18 +8,31 @@ const prisma = new PrismaClient();
 
 // Регистрация нового пользователя
 const register = async (req, res) => {
+  try {
     const { username, password } = req.body;
+    const file = req.file;
   
     if (!username || !password) return res.status(400).json({ error: 'Все поля обязательны' });
 
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await prisma.user.create({
-            data: { username, passwordHash: hashedPassword },
-        });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        const tokenData = generateTokens(newUser.id);
-        res.json({ message: 'Регистрация успешна', ...tokenData });
+    let avatarUrl = null;
+    if (file) {
+      avatarUrl = 'https://altushka.site/uploads/avatars/' + file.filename;
+    }
+
+    const newUser = await prisma.user.create({
+    data: 
+      { 
+        username,
+        passwordHash: hashedPassword,
+        avatarUrl
+      },
+    });
+
+    const tokenData = generateTokens(newUser.id);
+    res.json({ message: 'Регистрация успешна', ...tokenData });
+
     } catch (err) {
         res.status(500).json({ error: 'Хм... Кажется, альтушка упала. Попробую ее поднять.' });
     }
@@ -38,6 +51,41 @@ const login = async (req, res) => {
     const tokenData = generateTokens(user.id);
     res.json({ message: 'Авторизация успешна', ...tokenData });
 };
+
+const updateUser = async (req, res) => {
+  const { userId } = req.params;
+  const { username, password } = req.body;
+  const file = req.file; // если есть загружаемый файл
+
+  try {
+    // Собираем данные для апдейта
+    const dataToUpdate = {};
+
+    if (username) dataToUpdate.username = username;
+    if (password) {
+      const hashed = await bcrypt.hash(password, 10);
+      dataToUpdate.passwordHash = hashed;
+    }
+    if (file) {
+      dataToUpdate.avatarUrl = 'https://altushka.site/uploads/avatars/' + file.filename;
+    }
+
+
+    // Сам апдейт
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: dataToUpdate,
+    });
+
+    const newTokens = generateTokens(updatedUser.id);
+
+    return res.json({ message: 'Данные пользователя обновлены', user: updatedUser, ...newTokens });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Ошибка обновления пользователя' });
+  }
+};
+
 
 // Обновление токена
 const refreshToken = (req, res) => {
@@ -73,7 +121,7 @@ const getUsers = async (req, res) => {
 const getMessages = async (req, res) => {
     const { from, to } = req.params;
     try {
-        const conversation = await prisma.message.findMany({
+        let conversation = await prisma.message.findMany({
             where: {
                 OR: [
                     { fromId: from, toId: to },
@@ -82,6 +130,8 @@ const getMessages = async (req, res) => {
             },
             orderBy: { created_at: 'asc' },
         });
+
+        conversation.length === 0 ? conversation = Date.now() : conversation;
 
         res.json(conversation);
     } catch (err) {
@@ -100,6 +150,7 @@ const getUser = async (req, res) => {
       select: {
         id: true,
         username: true,
+        avatarUrl: true,
       }
     });
 
@@ -128,11 +179,12 @@ const getUser = async (req, res) => {
       select: {
         id: true,
         username: true,
+        avatarUrl: true,
       },
     });
 
     // Теперь для каждого собеседника достаём последнее сообщение
-    const chats = [];
+    let chats = [];
     for (const r of recipients) {
       // Последнее по времени сообщение от who к r ИЛИ от r к who
       const lastMsg = await prisma.message.findFirst({
@@ -154,9 +206,12 @@ const getUser = async (req, res) => {
           fromId: lastMsg.fromId,
           toId: lastMsg.toId,
         } : null,
+        avatarUrl: r.avatarUrl,
       });
     }
 
+    chats.length === 0 ? chats = "Нет ни одной переписки" : chats;
+    console.log(chats);
     // Итоговый ответ
     res.json({
       user: currentUser,
@@ -170,4 +225,4 @@ const getUser = async (req, res) => {
 
 
 
-module.exports = { register, login, refreshToken, getUsers, getMessages, getUser };
+module.exports = { register, login, updateUser, refreshToken, getUsers, getMessages, getUser };

@@ -8,6 +8,7 @@
 
 $background: #131313;
 $grey: #1A1A1A;
+$transgrey: #1a1a1acc;
 $postgrey: #222222;
 $overgrey: #323232;
 $supergrey: #626262;
@@ -179,13 +180,13 @@ input {
 
 
 
-.cp-right-middle-container::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 10px;
   /* Толщина полосы */
   z-index: 8888;
 }
 
-.cp-right-middle-container::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: $grey;
   /* Цвет фона скроллбара */
   border-radius: 10px;
@@ -193,7 +194,7 @@ input {
   z-index: 8888;
 }
 
-.cp-right-middle-container::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: $overgrey;
   /* Цвет ползунка */
   border-radius: 10px;
@@ -201,7 +202,7 @@ input {
 }
 
 @media(min-width: 0px) {
-  .cp-right-middle-container {
+  * {
     scrollbar-width: none;
     /* Убирает скроллбар в Firefox */
     -ms-overflow-style: none;
@@ -209,11 +210,6 @@ input {
     z-index: 8888;
   }
 
-  .cp-right-middle-container::-webkit-scrollbar {
-    display: none;
-    /* Убирает скроллбар в Chrome, Safari */
-    z-index: 8888;
-  }
 
 }
 

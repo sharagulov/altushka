@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { HiMenu } from "react-icons/hi";
+import { HiMenu, HiOutlineSearch } from "react-icons/hi";
 import { usePopup } from '@/contexts/PopupContext';
 import { jwtDecode } from 'jwt-decode';
 import '@/styles/UPstyle.scss';
@@ -37,6 +37,7 @@ export default function UserListPage() {
       .then((data) => {
           setChattedUsers(data.chats);
           setUser(data.user)
+          console.log(chattedUsers)
       })
       .catch((err) => console.error("Ошибка загрузки информации о пользователе:", err));
   }, [currentUserId]);
@@ -44,7 +45,7 @@ export default function UserListPage() {
   useEffect(() => {
     fetch('/api/users')
       .then((res) => res.json())
-      .then((data) => setAllUsers(data))
+      .then((data) => {setAllUsers(data)})
       .catch((err) => console.error("Ошибка загрузки общего списка пользователей:", err));
   }, []);
 
@@ -109,13 +110,27 @@ export default function UserListPage() {
       <main className='user-page-main'>
         <div className='top-block'>
           <div className='header-row-block' >
-            <div className='up-loadable-block'>
-              <span className={`up-user ${showUser}-context`}>Чаты <span className='colored-text'>{user?.username}</span></span>
-              <div className={`skeleton up-user-skeleton ${showUser}-context`}/>
-            </div>
+
             <div className='pointer' onClick={showPopup}>
               <HiMenu size={22}/>
             </div>
+            <div className='up-loadable-block'>
+              {/* <div className={`up-user ${showUser}-context`}>
+                <span className=''>{user?.username}</span>
+                {user && (
+                  <div className="up-avatar-block">
+                    <img
+                      src={user?.avatarUrl || '/logo192.png'}
+                      alt="Аватар"
+                      className="up-avatar"
+                    />
+                  </div>
+                )}
+              </div> */}
+              <HiOutlineSearch className='pointer' size={19}/>
+              {/* <div className={`skeleton up-user-skeleton ${showUser}-context`}/> */}
+            </div>
+
           </div>
           <div>
             <input
@@ -127,7 +142,7 @@ export default function UserListPage() {
         </div>
         <div className='chats-block'>
           
-          {users
+          {Array.isArray(users) && users
             .sort((a, b) => {return new Date (b.lastMessage?.created_at).getTime() - new Date (a.lastMessage?.created_at).getTime()})
             .filter((u) => u.id !== currentUserId) // Исключаем самого себя
             .map((u) => {
@@ -139,6 +154,8 @@ export default function UserListPage() {
               </div>
               )
           })}
+
+          {!Array.isArray(users) && <div style={{textAlign:"center"}}><span className='super-greyed-span-text'>{users}</span></div>}
 
           <div className={`skeleton-chats-overlay ${!showChats ? "show-skeleton-chats" : "hide-skeleton-chats"}`}>
             <SkeletonChats />

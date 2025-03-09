@@ -4,7 +4,7 @@ import './skeleton-chats.scss';
 
 export default function SkeletonChats() {
   const skeletons = useMemo(() => {
-    const count = Math.floor(Math.random() * 4) + 4;
+    const count = 1;
     return Array.from({ length: count }, (_, i) => i);
   }, []);
 
